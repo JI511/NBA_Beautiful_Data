@@ -23,19 +23,24 @@ def get_play_box_score(name, date_obj=None, timeout=3):
         date = datetime.datetime.today()
     bs = None
     while True:
-        print('Attempting date: %s' % date.strftime('%y-%m-%d'))
-        found = False
-        box_scores = client.player_box_scores(day=date.day, month=date.month, year=date.year)
-        print('Total players on this date: %s' % len(box_scores))
-        for box_score in box_scores:
-            # print(box_score)
-            if name in box_score['name'].lower():
-                bs = box_score
-                found = True
+        if timeout > 0:
+            print('Attempting date: %s' % date.strftime('%y-%m-%d'))
+            found = False
+            box_scores = client.player_box_scores(day=date.day, month=date.month, year=date.year)
+            print('Total players on this date: %s' % len(box_scores))
+            for box_score in box_scores:
+                # print(box_score)
+                if name in box_score['name'].lower():
+                    bs = box_score
+                    found = True
+                    break
+            if found:
                 break
-        if found:
+            date -= datetime.timedelta(days=1)
+            timeout -= 1
+        else:
+            print("Timeout reached.")
             break
-        date -= datetime.timedelta(days=1)
     return bs
 
 # ----------------------------------------------------------------------------------------------------------------------

@@ -25,7 +25,7 @@ class Application(object):
         """
         print("The Latest box score for Lebron James")
         # date = datetime.datetime.today()
-        date = datetime.datetime(year=2019, month=3, day=29)
+        date = datetime.datetime(year=2019, month=4, day=29)
         print(api.get_play_box_score(name=self.player, date_obj=date))
 
 
