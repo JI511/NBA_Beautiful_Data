@@ -9,11 +9,14 @@ class BoxScore(object):
     """
     Class for a box score object.
     """
-    def __init__(self, player_name):
+    def __init__(self, player_name, points, rebounds, assists):
         """
         Setup for the BoxScore class.
         """
         self.player_name = player_name
+        self.points = points
+        self.rebounds = rebounds
+        self.assists = assists
 
 # ----------------------------------------------------------------------------------------------------------------------
 # End

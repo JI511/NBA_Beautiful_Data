@@ -6,6 +6,7 @@
 import datetime
 from basketball_reference_web_scraper import client
 from basketball_reference_web_scraper.data import Team
+from box_score import BoxScore
 
 
 def get_play_box_score(name, date_obj=None, timeout=3):
