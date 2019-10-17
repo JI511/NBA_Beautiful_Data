@@ -15,7 +15,6 @@ class BoxScore(object):
 
         :param dict bs_dict: Dictionary result from the analytics API.
         """
-        self.keys = ['name', 'points', 'rebounds', 'assists']
         self.player_name = bs_dict['name']
         self.made_fg = bs_dict['made_field_goals']
         self.made_threes = bs_dict['made_three_point_field_goals']
@@ -28,6 +27,7 @@ class BoxScore(object):
         self.rebounds = self.__calculate_rebounds(o_reb=self.offensive_rebounds,
                                                   d_reb=self.defensive_rebounds)
         self.assists = bs_dict['assists']
+        self.team = bs_dict['team']
 
     def to_string(self):
         """

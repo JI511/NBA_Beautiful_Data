@@ -28,8 +28,9 @@ class Application(object):
         # date = datetime.datetime.today()
         date = datetime.datetime(year=2019, month=3, day=29)
         box_score = BoxScore(api.get_play_box_score(name=self.player, date_obj=date))
-        print(box_score.to_string())
-
+        # print(box_score.to_string())
+        print(box_score.team)
+        print(type(box_score.team))
 
 
 # ----------------------------------------------------------------------------------------------------------------------
