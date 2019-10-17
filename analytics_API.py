@@ -30,9 +30,9 @@ def get_play_box_score(name, date_obj=None, timeout=3):
             box_scores = client.player_box_scores(day=date.day, month=date.month, year=date.year)
             print('Total players on this date: %s' % len(box_scores))
             for box_score in box_scores:
-                # print(box_score)
                 if name in box_score['name'].lower():
                     bs = box_score
+                    print(bs)
                     found = True
                     break
             if found:
