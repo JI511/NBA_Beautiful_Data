@@ -23,7 +23,10 @@ class BoxScore(object):
         self.points = self.__calculate_points(made_fg=self.made_fg,
                                               made_three=self.made_threes,
                                               made_ft=self.made_ft)
-        self.rebounds = bs_dict['rebounds']
+        self.offensive_rebounds = bs_dict['offensive_rebounds']
+        self.defensive_rebounds = bs_dict['defensive_rebounds']
+        self.rebounds = self.__calculate_rebounds(o_reb=self.offensive_rebounds,
+                                                  d_reb=self.defensive_rebounds)
         self.assists = bs_dict['assists']
 
     def to_string(self):
@@ -33,10 +36,10 @@ class BoxScore(object):
         :rtype: str
         """
         box_score = ''
-        box_score += 'Name: %s' % self.player_name
-        box_score += 'Points: %s' % self.points
-        box_score += 'Rebounds: %s' % self.rebounds
-        box_score += 'Assists: %s' % self.assists
+        box_score += 'Name: %s\n' % self.player_name
+        box_score += 'Points: %s\n' % self.points
+        box_score += 'Rebounds: %s\n' % self.rebounds
+        box_score += 'Assists: %s\n' % self.assists
         return box_score
 
     @staticmethod
@@ -56,6 +59,18 @@ class BoxScore(object):
         points += (fg * 2)
         points += made_ft
         return points
+
+    @staticmethod
+    def __calculate_rebounds(o_reb, d_reb):
+        """
+        Calculates the number of rebounds from offensive and defensive rebounds
+
+        :param o_reb: Number of offensive rebounds.
+        :param d_reb: Number of defensive rebounds.
+        :return: The number of rebounds.
+        :rtype: int
+        """
+        return o_reb + d_reb
 
 # ----------------------------------------------------------------------------------------------------------------------
 # End
