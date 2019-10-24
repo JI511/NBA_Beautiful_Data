@@ -105,7 +105,6 @@ def get_teams_played_on_date(date_obj=None, timeout=1):
             timeout -= 1
         else:
             break
-    print(teams)
     return teams
 
 # ----------------------------------------------------------------------------------------------------------------------

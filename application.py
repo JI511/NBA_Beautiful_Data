@@ -31,8 +31,15 @@ class Application(object):
 
         box_score = BoxScore(Api.get_player_box_score(name=self.player, date_obj=date))
         print(box_score.to_string())
-        team_box_scores = TeamBoxScore(Api.get_daily_box_scores(date_obj=date)[Team.LOS_ANGELES_LAKERS.name], )
-        print(team_box_scores.to_string())
+
+        team_box_scores = []
+        daily_box_scores = Api.get_daily_box_scores(date_obj=date)
+        for team in daily_box_scores.keys():
+            team_box_scores.append(
+                TeamBoxScore(box_scores=daily_box_scores[team],
+                             team_box_score=None,
+                             team_name=team))
+            print(team_box_scores[-1].to_string())
 
 
 # ----------------------------------------------------------------------------------------------------------------------

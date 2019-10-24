@@ -9,13 +9,14 @@ class TeamBoxScore(object):
     """
     Class for a team box score object
     """
-    def __init__(self, box_scores, team_box_score):
+    def __init__(self, box_scores, team_box_score, team_name):
         """
         Setup for the TeamBoxScore class.
 
         :param list box_scores: Player box scores.
         """
         self.box_scores = box_scores
+        # self.team = team_box_score['team']
         self.players = self.__get_box_score_items('name')
 
     def to_string(self):
@@ -26,7 +27,7 @@ class TeamBoxScore(object):
         :rtype: str
         """
         builder = ""
-        builder += str(self.players)
+        builder += 'Players: %s' % str(self.players)
         return builder
 
     def __get_box_score_items(self, key):
