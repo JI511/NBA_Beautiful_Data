@@ -6,8 +6,9 @@
 import datetime
 from basketball_reference_web_scraper import client
 from basketball_reference_web_scraper.data import Team
-import analytics_API as api
+import analytics_API as Api
 from box_score import BoxScore
+from team_box_score import TeamBoxScore
 
 
 class Application(object):
@@ -28,9 +29,10 @@ class Application(object):
         # date = datetime.datetime.today()
         date = datetime.datetime(year=2019, month=10, day=22)
 
-        box_score = BoxScore(api.get_player_box_score(name=self.player, date_obj=date))
+        box_score = BoxScore(Api.get_player_box_score(name=self.player, date_obj=date))
         print(box_score.to_string())
-        print(api.get_daily_box_scores(date_obj=date))
+        team_box_scores = TeamBoxScore(Api.get_daily_box_scores(date_obj=date)[Team.LOS_ANGELES_LAKERS.name])
+        print(team_box_scores.to_string())
 
 
 # ----------------------------------------------------------------------------------------------------------------------

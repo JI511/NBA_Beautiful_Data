@@ -59,7 +59,6 @@ def get_daily_box_scores(date_obj=None, timeout=1):
     if date_obj is None:
         date_obj = datetime.datetime.today()
     while True:
-        print(date_obj.day)
         if timeout > 0:
             teams = get_teams_played_on_date(date_obj=date_obj)
             if len(teams) > 0:

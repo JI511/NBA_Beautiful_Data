@@ -32,6 +32,7 @@ class BoxScore(object):
     def to_string(self):
         """
         Converts the box score object into an easily readable string.
+
         :return: Box score data
         :rtype: str
         """
