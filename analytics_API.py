@@ -46,9 +46,21 @@ def get_player_box_score(name, date_obj=None, timeout=3):
     return bs
 
 
+def get_team_box_scores(team, date_obj=None, timeout=3):
+    """
+    Gets the team box score data for a specific day.
+
+    :param str team: The team to search for.
+    :param datetime.datetime date_obj: Datetime object for starting day to search.
+    :param int timeout: Number of days to search before giving up.
+    :return:
+    """
+    # todo use the team score api call, also give that to the object instead of manually calculating from player data.
+
+
 def get_daily_box_scores(date_obj=None, timeout=1):
     """
-    Gets all player box scores for a specific day. The default for this is only the one date sepecified.
+    Gets all player box scores for a specific day. The default for this is only the one date specified.
 
     :param datetime.datetime date_obj: Datetime object for starting day to search.
     :param int timeout: Number of days to search before giving up.

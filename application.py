@@ -31,7 +31,7 @@ class Application(object):
 
         box_score = BoxScore(Api.get_player_box_score(name=self.player, date_obj=date))
         print(box_score.to_string())
-        team_box_scores = TeamBoxScore(Api.get_daily_box_scores(date_obj=date)[Team.LOS_ANGELES_LAKERS.name])
+        team_box_scores = TeamBoxScore(Api.get_daily_box_scores(date_obj=date)[Team.LOS_ANGELES_LAKERS.name], )
         print(team_box_scores.to_string())
 
 

@@ -9,7 +9,7 @@ class TeamBoxScore(object):
     """
     Class for a team box score object
     """
-    def __init__(self, box_scores):
+    def __init__(self, box_scores, team_box_score):
         """
         Setup for the TeamBoxScore class.
 
