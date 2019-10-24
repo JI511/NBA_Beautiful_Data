@@ -27,7 +27,7 @@ class BoxScore(object):
         self.rebounds = self.__calculate_rebounds(o_reb=self.offensive_rebounds,
                                                   d_reb=self.defensive_rebounds)
         self.assists = bs_dict['assists']
-        self.team = bs_dict['team']
+        self.player_team = bs_dict['team'].name
 
     def to_string(self):
         """
@@ -37,6 +37,7 @@ class BoxScore(object):
         """
         box_score = ''
         box_score += 'Name: %s\n' % self.player_name
+        box_score += 'Team: %s\n' % self.player_team.title().replace('_', ' ')
         box_score += 'Points: %s\n' % self.points
         box_score += 'Rebounds: %s\n' % self.rebounds
         box_score += 'Assists: %s\n' % self.assists
