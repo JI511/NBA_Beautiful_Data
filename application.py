@@ -25,10 +25,12 @@ class Application(object):
         Runs the application.
         """
         print("The Latest box score for Lebron James")
-        date = datetime.datetime.today()
-        # date = datetime.datetime(year=2019, month=3, day=29)
-        box_score = BoxScore(api.get_play_box_score(name=self.player, date_obj=date))
+        # date = datetime.datetime.today()
+        date = datetime.datetime(year=2019, month=10, day=22)
+
+        box_score = BoxScore(api.get_player_box_score(name=self.player, date_obj=date))
         print(box_score.to_string())
+        print(api.get_daily_box_scores(date_obj=date))
 
 
 # ----------------------------------------------------------------------------------------------------------------------
