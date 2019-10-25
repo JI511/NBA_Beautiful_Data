@@ -79,6 +79,8 @@ def get_daily_box_scores(date_obj=None, timeout=1):
                     team_dict[team] = []
                 for player in all_box_scores:
                     team_dict[player['team'].name].append(player)
+                break
+            date_obj -= datetime.timedelta(days=1)
             timeout -= 1
         else:
             break
@@ -102,6 +104,8 @@ def get_teams_played_on_date(date_obj=None, timeout=1):
             team_box_scores = client.team_box_scores(day=date_obj.day, month=date_obj.month, year=date_obj.year)
             if len(team_box_scores) > 1:
                 teams = [entry['team'].name for entry in team_box_scores]
+                break
+            date_obj -= datetime.timedelta(days=1)
             timeout -= 1
         else:
             break

@@ -14,9 +14,12 @@ class TeamBoxScore(object):
         Setup for the TeamBoxScore class.
 
         :param list box_scores: Player box scores.
+        :param list team_box_score: Team box score stats.
+        :param str team_name: The team name of the associated box scores.
         """
         self.box_scores = box_scores
-        # self.team = team_box_score['team']
+        self.team_box_score = team_box_score
+        self.team = team_name
         self.players = self.__get_box_score_items('name')
 
     def to_string(self):
@@ -26,8 +29,8 @@ class TeamBoxScore(object):
         :return: Team box score data.
         :rtype: str
         """
-        builder = ""
-        builder += 'Players: %s' % str(self.players)
+        builder = "Team: %s\n" % self.team
+        builder += '\tPlayers: %s\n' % str(self.players)
         return builder
 
     def __get_box_score_items(self, key):
