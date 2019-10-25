@@ -55,7 +55,18 @@ def get_team_box_scores(team, date_obj=None, timeout=3):
     :param int timeout: Number of days to search before giving up.
     :return:
     """
-    # todo use the team score api call, also give that to the object instead of manually calculating from player data.
+    if date_obj is None:
+        date_obj = datetime.datetime.today()
+    team_bs = None
+    while True:
+        if timeout > 0:
+            team_bs = client.team_box_scores(day=date_obj.day, month=date_obj.month, year=date_obj.year)
+            # todo
+            date_obj -= datetime.timedelta(days=1)
+            timeout -= 1
+        else:
+            break
+    return team_bs
 
 
 def get_daily_box_scores(date_obj=None, timeout=1):
