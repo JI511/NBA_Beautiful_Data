@@ -22,7 +22,7 @@ class TeamBoxScore(object):
         # sorted(trial_list, key=lambda x: trial_dict[x])
         self.player_box_scores = [BoxScore(box_score) for box_score in box_scores]
         self.team_box_score = team_box_score
-        self.team = team_name
+        self.team = team_name.title().replace('_', ' ')
 
     def to_string(self):
         """
@@ -66,7 +66,8 @@ class TeamBoxScore(object):
 
         :param save_fig: Indicates if the plot should be saved to disk.
         """
-        ez_plot.create_bar_graph(self.get_players(), self.get_points())
+        ez_plot.create_bar_graph(x_data=self.get_players(), y_data=self.get_points(),
+                                 x_lab='Players', y_lab='Points', title='%s Points' % self.team)
 
 
 # ----------------------------------------------------------------------------------------------------------------------

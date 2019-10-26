@@ -7,7 +7,7 @@ from matplotlib import pyplot
 import numpy as np
 
 
-def create_bar_graph(x_data, y_data, x_lab='x', y_lab='y'):
+def create_bar_graph(x_data, y_data, x_lab='x', y_lab='y', title='title'):
     """
     Creates a bar graph from provided data.
 
@@ -22,6 +22,7 @@ def create_bar_graph(x_data, y_data, x_lab='x', y_lab='y'):
     rects = ax.bar(x_data, y_data, width=0.6)
     pyplot.xlabel(x_lab)
     pyplot.ylabel(y_lab)
+    pyplot.title(title)
     pyplot.ylim((0, np.max(y_data) + np.sqrt(np.max(y_data))))
     pyplot.tick_params('x', labelsize=8, labelrotation=45, direction='out')
     for rect in rects:
