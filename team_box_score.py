@@ -11,16 +11,16 @@ class TeamBoxScore(object):
     """
     Class for a team box score object
     """
-    def __init__(self, box_scores, team_box_score, team_name):
+    def __init__(self, box_scores, team_box_score, team_name, date):
         """
         Setup for the TeamBoxScore class.
 
         :param list box_scores: Player box scores.
         :param list team_box_score: Team box score stats.
         :param str team_name: The team name of the associated box scores.
+        :param datetime.datetime date: The data from the box score.
         """
-        # sorted(trial_list, key=lambda x: trial_dict[x])
-        self.player_box_scores = [BoxScore(box_score) for box_score in box_scores]
+        self.player_box_scores = [BoxScore(box_score, date) for box_score in box_scores]
         self.team_box_score = team_box_score
         self.team = team_name.title().replace('_', ' ')
 
@@ -44,7 +44,6 @@ class TeamBoxScore(object):
         """
         players = []
         for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
-            print(bs.player_name)
             players.append(bs.player_name)
         return players
 
@@ -58,6 +57,18 @@ class TeamBoxScore(object):
         players = []
         for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
             players.append(bs.points)
+        return players
+
+    def get_rebounds(self):
+        """
+        Gets a list of player rebounds of the team box score.
+
+        :return: Player names
+        :rtype: list
+        """
+        players = []
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            players.append(bs.rebounds)
         return players
 
     def create_points_graph(self, save_fig=False):

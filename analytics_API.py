@@ -33,7 +33,6 @@ def get_player_box_score(name, date_obj=None, timeout=3):
             for box_score in box_scores:
                 if name in box_score['name'].lower():
                     bs = box_score
-                    print(bs)
                     found = True
                     break
             if found:
@@ -95,7 +94,7 @@ def get_daily_box_scores(date_obj=None, timeout=1):
             timeout -= 1
         else:
             break
-    return team_dict
+    return team_dict, date_obj
 
 
 def get_teams_played_on_date(date_obj=None, timeout=1):

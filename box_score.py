@@ -9,11 +9,12 @@ class BoxScore(object):
     """
     Class for a box score object.
     """
-    def __init__(self, bs_dict):
+    def __init__(self, bs_dict, date):
         """
         Setup for the BoxScore class.
 
         :param dict bs_dict: Dictionary result from the analytics API.
+        :param datetime.datetime date: The data from the box score.
         """
         self.player_name = bs_dict['name']
         self.made_fg = bs_dict['made_field_goals']
@@ -28,6 +29,7 @@ class BoxScore(object):
                                                   d_reb=self.defensive_rebounds)
         self.assists = bs_dict['assists']
         self.player_team = bs_dict['team'].name
+        self.date = date
 
     def to_string(self):
         """

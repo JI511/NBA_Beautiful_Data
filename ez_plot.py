@@ -7,7 +7,7 @@ from matplotlib import pyplot
 import numpy as np
 
 
-def create_bar_graph(x_data, y_data, x_lab='x', y_lab='y', title='title'):
+def create_bar_graph(x_data, y_data, x_lab='x', y_lab='y', title='title', show=False):
     """
     Creates a bar graph from provided data.
 
@@ -15,15 +15,16 @@ def create_bar_graph(x_data, y_data, x_lab='x', y_lab='y', title='title'):
     :param list y_data: Data for the y-axis.
     :param str x_lab: Label for the x-axis.
     :param str y_lab: Label for the y-axis.
-    :return:
+    :param str title: Title of the plot.
+    :param bool show: Indicates if the graph should be displayed.
     """
 
-    fig, ax = pyplot.subplots(figsize=(12, 5))
+    fig, ax = pyplot.subplots(figsize=(8, 4))
     rects = ax.bar(x_data, y_data, width=0.6)
-    pyplot.xlabel(x_lab)
-    pyplot.ylabel(y_lab)
-    pyplot.title(title)
-    pyplot.ylim((0, np.max(y_data) + np.sqrt(np.max(y_data))))
+    ax.set_xlabel(x_lab)
+    ax.set_ylabel(y_lab)
+    ax.set_title(title)
+    ax.set_ylim((0, np.max(y_data) + np.sqrt(np.max(y_data))))
     pyplot.tick_params('x', labelsize=8, labelrotation=45, direction='out')
     for rect in rects:
         height = int(rect.get_height())
@@ -43,7 +44,8 @@ def create_bar_graph(x_data, y_data, x_lab='x', y_lab='y', title='title'):
                     weight='bold',
                     fontsize='large')
     pyplot.tight_layout()
-    pyplot.show()
+    if show:
+        pyplot.show()
 # ----------------------------------------------------------------------------------------------------------------------
 # End
 # ----------------------------------------------------------------------------------------------------------------------
