@@ -3,6 +3,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # imports
+from box_score import BoxScore
 
 
 class TeamBoxScore(object):
@@ -17,10 +18,9 @@ class TeamBoxScore(object):
         :param list team_box_score: Team box score stats.
         :param str team_name: The team name of the associated box scores.
         """
-        self.box_scores = box_scores
+        self.player_box_scores = [BoxScore(box_score) for box_score in box_scores]
         self.team_box_score = team_box_score
         self.team = team_name
-        self.players = self.__get_box_score_items('name')
 
     def to_string(self):
         """
@@ -30,21 +30,20 @@ class TeamBoxScore(object):
         :rtype: str
         """
         builder = "Team: %s\n" % self.team
-        builder += '\tPlayers: %s\n' % str(self.players)
+        builder += '\tPlayers: %s\n' % self.get_players()
         return builder
 
-    def __get_box_score_items(self, key):
+    def get_players(self):
         """
-        Gets a specific box score item from a list of players.
-
-        :param str key: The key to use within the box score dict.
-        :return: The items for each player.
+        Gets a list of player names on the team box score.
+        :return: Player names
         :rtype: list
         """
-        return_val = []
-        for box_score in self.box_scores:
-            return_val.append(box_score[key])
-        return return_val
+        players = []
+        for bs in self.player_box_scores:
+            players.append(bs.player_name)
+        return players
+
 
 # ----------------------------------------------------------------------------------------------------------------------
 # End
