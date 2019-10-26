@@ -39,7 +39,8 @@ def create_bar_graph(x_data, y_data, x_lab='x', y_lab='y'):
                     ha='center',
                     va='center',
                     color=color,
-                    weight='bold')
+                    weight='bold',
+                    fontsize='large')
     pyplot.tight_layout()
     pyplot.show()
 # ----------------------------------------------------------------------------------------------------------------------
