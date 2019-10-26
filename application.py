@@ -37,9 +37,12 @@ class Application(object):
         for team in daily_box_scores.keys():
             team_box_scores.append(
                 TeamBoxScore(box_scores=daily_box_scores[team],
-                             team_box_score=None,
+                             team_box_score=[],
                              team_name=team))
             print(team_box_scores[-1].to_string())
+            team_box_scores[-1].create_points_graph()
+            break
+
 
 
 # ----------------------------------------------------------------------------------------------------------------------

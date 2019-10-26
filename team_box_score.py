@@ -4,6 +4,7 @@
 
 # imports
 from box_score import BoxScore
+import ez_plot
 
 
 class TeamBoxScore(object):
@@ -18,6 +19,7 @@ class TeamBoxScore(object):
         :param list team_box_score: Team box score stats.
         :param str team_name: The team name of the associated box scores.
         """
+        # sorted(trial_list, key=lambda x: trial_dict[x])
         self.player_box_scores = [BoxScore(box_score) for box_score in box_scores]
         self.team_box_score = team_box_score
         self.team = team_name
@@ -36,13 +38,35 @@ class TeamBoxScore(object):
     def get_players(self):
         """
         Gets a list of player names on the team box score.
+
         :return: Player names
         :rtype: list
         """
         players = []
-        for bs in self.player_box_scores:
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            print(bs.player_name)
             players.append(bs.player_name)
         return players
+
+    def get_points(self):
+        """
+        Gets a list of player points of the team box score.
+
+        :return: Player names
+        :rtype: list
+        """
+        players = []
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            players.append(bs.points)
+        return players
+
+    def create_points_graph(self, save_fig=False):
+        """
+        Creates a bar graph showing points for each player on the team box score.
+
+        :param save_fig: Indicates if the plot should be saved to disk.
+        """
+        ez_plot.create_bar_graph(self.get_players(), self.get_points())
 
 
 # ----------------------------------------------------------------------------------------------------------------------

@@ -122,6 +122,25 @@ def get_teams_played_on_date(date_obj=None, timeout=1):
             break
     return teams
 
+
+def check_supported_stats(stats):
+    """
+    Checks a list of strings to determine if the stat type is supported.
+
+    :param stats: The stats to check.
+    :return: Indicates if all provided stats are acceptable.
+    :rtype: bool
+    """
+    supported_stats = ['points', 'rebounds', 'assists', 'made_field_goals', 'made_three_point_field_goals',
+                       'made_free_throws', ]
+    valid = True
+    for stat in stats:
+        if stat not in supported_stats:
+            valid = False
+            break
+    return valid
+
+
 # ----------------------------------------------------------------------------------------------------------------------
 # End
 # ----------------------------------------------------------------------------------------------------------------------
