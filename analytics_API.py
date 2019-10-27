@@ -4,6 +4,8 @@
 
 # imports
 import datetime
+import os
+import pandas as pd
 from collections import OrderedDict
 from basketball_reference_web_scraper import client
 from basketball_reference_web_scraper.data import Team
@@ -139,6 +141,62 @@ def check_supported_stats(stats):
             valid = False
             break
     return valid
+
+
+def get_existing_data_frame(csv_path):
+    """
+    Determines if a data frame already exists, and returns the data frame if true. Returns None if does not exist.
+
+    :param str csv_path: Path of the csv file.
+    :param str index: Index to use on the data frame.
+    :return: Data frame if exists, None otherwise
+    :rtype: pd.DataFrame
+    """
+    df = None
+    if os.path.exists(csv_path):
+        df = pd.read_csv(csv_path)
+    return df
+
+
+def create_data_frame_from_team_box_scores(team_box_scores):
+    """
+    Creates a pandas data frame object from a list of team box score objects.
+
+    :param list team_box_scores: Team box score objects
+    :return: Pandas data frame
+    :rtype: pd.DataFrame
+    """
+    data = {}
+    index = []
+    for stat in Vars.supported_stats:
+        data[stat] = []
+    for tbs in team_box_scores:
+        index.extend(tbs.get_players())
+        data['points'].extend(tbs.get_points())
+        data['rebounds'].extend(tbs.get_rebounds())
+        data['assists'].extend(tbs.get_assists())
+        data['made_field_goals'].extend(tbs.get_made_field_goals())
+        data['made_three_point_field_goals'].extend(tbs.get_made_three_point_field_goals())
+        data['made_free_throws'].extend(tbs.get_made_free_throws())
+        data['offensive_rebounds'].extend(tbs.get_offensive_rebounds())
+        data['defensive_rebounds'].extend(tbs.get_defensive_rebounds())
+        data['team'].extend(tbs.get_teams())
+        data['location'].extend(tbs.get_locations())
+        data['opponent'].extend(tbs.get_opponents())
+        data['outcome'].extend(tbs.get_outcomes())
+        data['seconds_played'].extend(tbs.get_seconds_played())
+        data['attempted_three_point_field_goals'].extend(tbs.get_attempted_three_point_field_goals())
+        data['attempted_free_throws'].extend(tbs.get_attempted_free_throws())
+        data['attempted_field_goals'].extend(tbs.get_attempted_field_goals())
+        data['steals'].extend(tbs.get_steals())
+        data['blocks'].extend(tbs.get_blocks())
+        data['turnovers'].extend(tbs.get_turnovers())
+        data['personal_fouls'].extend(tbs.get_personal_fouls())
+        data['game_score'].extend(tbs.get_game_scores())
+        data['date'].extend(tbs.get_dates())
+
+    df = pd.DataFrame(data, index=index)
+    return df
 
 
 # ----------------------------------------------------------------------------------------------------------------------
