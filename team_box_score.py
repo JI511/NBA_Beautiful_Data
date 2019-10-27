@@ -179,6 +179,150 @@ class TeamBoxScore(object):
             players.append(bs.player_team)
         return players
 
+    def get_locations(self):
+        """
+        Gets a list of player locations (home or away) of the team box score.
+
+        :return: Player locations
+        :rtype: list
+        """
+        players = []
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            players.append(bs.location)
+        return players
+
+    def get_opponents(self):
+        """
+        Gets a list of player opponents of the team box score.
+
+        :return: Player opponents
+        :rtype: list
+        """
+        players = []
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            players.append(bs.opponent)
+        return players
+
+    def get_outcomes(self):
+        """
+        Gets a list of player outcomes (win or lose) of the team box score.
+
+        :return: Player outcomes
+        :rtype: list
+        """
+        players = []
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            players.append(bs.outcome)
+        return players
+
+    def get_seconds_played(self):
+        """
+        Gets a list of player seconds played of the team box score.
+
+        :return: Player seconds played
+        :rtype: list
+        """
+        players = []
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            players.append(bs.seconds_played)
+        return players
+
+    def get_attempted_three_point_field_goals(self):
+        """
+        Gets a list of player attempted three point field goals of the team box score.
+
+        :return: Player attempted three point field goals
+        :rtype: list
+        """
+        players = []
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            players.append(bs.attempted_threes)
+        return players
+
+    def get_attempted_field_goals(self):
+        """
+        Gets a list of player attempted field goals of the team box score.
+
+        :return: Player attempted field goals
+        :rtype: list
+        """
+        players = []
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            players.append(bs.attempted_fg)
+        return players
+
+    def get_attempted_free_throws(self):
+        """
+        Gets a list of player attempted free throws of the team box score.
+
+        :return: Player attempted free throws
+        :rtype: list
+        """
+        players = []
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            players.append(bs.attempted_ft)
+        return players
+
+    def get_steals(self):
+        """
+        Gets a list of player steals of the team box score.
+
+        :return: Player steals
+        :rtype: list
+        """
+        players = []
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            players.append(bs.steals)
+        return players
+
+    def get_blocks(self):
+        """
+        Gets a list of player blocks of the team box score.
+
+        :return: Player blocks
+        :rtype: list
+        """
+        players = []
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            players.append(bs.blocks)
+        return players
+
+    def get_turnovers(self):
+        """
+        Gets a list of player turnovers of the team box score.
+
+        :return: Player turnovers
+        :rtype: list
+        """
+        players = []
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            players.append(bs.turnovers)
+        return players
+
+    def get_personal_fouls(self):
+        """
+        Gets a list of player personal fouls of the team box score.
+
+        :return: Player personal fouls
+        :rtype: list
+        """
+        players = []
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            players.append(bs.personal_fouls)
+        return players
+
+    def get_game_scores(self):
+        """
+        Gets a list of player game scores of the team box score.
+
+        :return: Player game scores
+        :rtype: list
+        """
+        players = []
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            players.append(bs.game_score)
+        return players
+
 # ----------------------------------------------------------------------------------------------------------------------
 # End
 # ----------------------------------------------------------------------------------------------------------------------

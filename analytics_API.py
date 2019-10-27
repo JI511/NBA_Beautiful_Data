@@ -33,6 +33,7 @@ def get_player_box_score(name, date_obj=None, timeout=3):
             print('Total players on this date: %s' % len(box_scores))
             for box_score in box_scores:
                 if name in box_score['name'].lower():
+                    print(box_score.keys())
                     bs = box_score
                     found = True
                     break
@@ -43,7 +44,7 @@ def get_player_box_score(name, date_obj=None, timeout=3):
         else:
             print("Timeout reached.")
             break
-    return bs
+    return bs, date_obj
 
 
 def get_team_box_scores(team, date_obj=None, timeout=3):

@@ -30,6 +30,18 @@ class BoxScore(object):
         self.assists = bs_dict['assists']
         self.player_team = bs_dict['team'].name
         self.date = date
+        self.location = bs_dict['location'].name
+        self.opponent = bs_dict['opponent'].name
+        self.outcome = bs_dict['outcome'].name
+        self.seconds_played = bs_dict['seconds_played']
+        self.attempted_threes = bs_dict['attempted_three_point_field_goals']
+        self.attempted_ft = bs_dict['attempted_free_throws']
+        self.attempted_fg = bs_dict['attempted_field_goals']
+        self.steals = bs_dict['steals']
+        self.blocks = bs_dict['blocks']
+        self.turnovers = bs_dict['turnovers']
+        self.personal_fouls = bs_dict['personal_fouls']
+        self.game_score = bs_dict['game_score']
 
     def to_string(self):
         """
