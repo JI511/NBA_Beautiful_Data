@@ -26,7 +26,7 @@ class Application(object):
         """
         Runs the application.
         """
-        print("The Latest box score for Lebron James")
+        # print("The Latest box score for Lebron James")
         # date = datetime.datetime.today()
         date = datetime.datetime(year=2019, month=10, day=25)
 
@@ -39,30 +39,30 @@ class Application(object):
             data[stat] = []
         daily_box_scores, found_date = Api.get_daily_box_scores(date_obj=date)
         for team in daily_box_scores.keys():
-            team_box_scores.append(
-                TeamBoxScore(box_scores=daily_box_scores[team],
-                             team_box_score=[],
-                             team_name=team,
-                             date=found_date))
+            team_box_scores.append(TeamBoxScore(box_scores=daily_box_scores[team],
+                                                team_box_score=[],
+                                                team_name=team,
+                                                date=found_date))
             # team_box_scores[-1].create_points_graph()
             # break
-            for tbs in team_box_scores:
-                data['player_name'].extend(tbs.get_players())
-                data['points'].extend(tbs.get_points())
-                data['rebounds'].extend(tbs.get_players())
-                data['assists'].extend(tbs.get_assists())
-                data['made_field_goals'].extend(tbs.get_made_field_goals())
-                data['made_three_point_field_goals'].extend(tbs.get_made_three_point_field_goals())
-                data['made_free_throws'].extend(tbs.get_made_free_throws())
-                data['offensive_rebounds'].extend(tbs.get_offensive_rebounds())
-                data['defensive_rebounds'].extend(tbs.get_defensive_rebounds())
-                data['team'].extend(tbs.get_teams())
-                data['date'].extend(tbs.get_dates())
+        for tbs in team_box_scores:
+            print('T')
+            data['player_name'].extend(tbs.get_players())
+            data['points'].extend(tbs.get_points())
+            data['rebounds'].extend(tbs.get_rebounds())
+            data['assists'].extend(tbs.get_assists())
+            data['made_field_goals'].extend(tbs.get_made_field_goals())
+            data['made_three_point_field_goals'].extend(tbs.get_made_three_point_field_goals())
+            data['made_free_throws'].extend(tbs.get_made_free_throws())
+            data['offensive_rebounds'].extend(tbs.get_offensive_rebounds())
+            data['defensive_rebounds'].extend(tbs.get_defensive_rebounds())
+            data['team'].extend(tbs.get_teams())
+            data['date'].extend(tbs.get_dates())
 
-        print(data)
+        # print(data)
         df = pd.DataFrame(data)
-        if not os.path.exists('test.csv'):
-            df.to_csv('test.csv')
+        # if not os.path.exists('test.csv'):
+        df.to_csv('test.csv')
 
 
 # ----------------------------------------------------------------------------------------------------------------------
