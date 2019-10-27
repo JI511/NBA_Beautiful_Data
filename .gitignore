@@ -8,7 +8,6 @@ __pycache__/
 
 # MY IGNORES
 *idea
-*.csv
 
 # Distribution / packaging
 .Python
