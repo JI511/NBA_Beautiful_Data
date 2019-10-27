@@ -148,13 +148,12 @@ def get_existing_data_frame(csv_path):
     Determines if a data frame already exists, and returns the data frame if true. Returns None if does not exist.
 
     :param str csv_path: Path of the csv file.
-    :param str index: Index to use on the data frame.
     :return: Data frame if exists, None otherwise
     :rtype: pd.DataFrame
     """
     df = None
     if os.path.exists(csv_path):
-        df = pd.read_csv(csv_path)
+        df = pd.read_csv(csv_path, index_col=0)
     return df
 
 

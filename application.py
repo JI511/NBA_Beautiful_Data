@@ -28,7 +28,7 @@ class Application(object):
         """
         # print("The Latest box score for Lebron James")
         # date = datetime.datetime.today()
-        date = datetime.datetime(year=2019, month=10, day=22)
+        date = datetime.datetime(year=2019, month=10, day=26)
 
         # temp_bs, fd = Api.get_player_box_score(name=self.player, date_obj=date)
         # box_score = BoxScore(temp_bs, fd)
@@ -50,14 +50,10 @@ class Application(object):
         if df is None:
             print('There was not an existing data frame.')
             df = new_df
-            print(df.head())
         else:
             print('Appending new data frame.')
-            print(df.shape)
             temp_df = df.append(new_df, sort=False)
-            print(temp_df.shape)
             temp_df.drop_duplicates(inplace=True)
-            print(temp_df.shape)
             df = temp_df
             print(df.shape)
         df.to_csv(my_csv)
