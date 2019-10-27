@@ -35,6 +35,18 @@ class TeamBoxScore(object):
         builder += '\tPlayers: %s\n' % self.get_players()
         return builder
 
+    def create_points_graph(self, save_fig=False):
+        """
+        Creates a bar graph showing points for each player on the team box score.
+
+        :param save_fig: Indicates if the plot should be saved to disk.
+        """
+        ez_plot.create_bar_graph(x_data=self.get_players(), y_data=self.get_points(),
+                                 x_lab='Players', y_lab='Points', title='%s Points' % self.team)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    # Getters
+    # ------------------------------------------------------------------------------------------------------------------
     def get_players(self):
         """
         Gets a list of player names on the team box score.
@@ -51,7 +63,7 @@ class TeamBoxScore(object):
         """
         Gets a list of player points of the team box score.
 
-        :return: Player names
+        :return: Player points
         :rtype: list
         """
         players = []
@@ -63,7 +75,7 @@ class TeamBoxScore(object):
         """
         Gets a list of player rebounds of the team box score.
 
-        :return: Player names
+        :return: Player rebounds
         :rtype: list
         """
         players = []
@@ -71,15 +83,101 @@ class TeamBoxScore(object):
             players.append(bs.rebounds)
         return players
 
-    def create_points_graph(self, save_fig=False):
+    def get_dates(self):
         """
-        Creates a bar graph showing points for each player on the team box score.
+        Gets a list of dates the box scores are from.
 
-        :param save_fig: Indicates if the plot should be saved to disk.
+        :return: Dates as strings.
+        :rtype: list
         """
-        ez_plot.create_bar_graph(x_data=self.get_players(), y_data=self.get_points(),
-                                 x_lab='Players', y_lab='Points', title='%s Points' % self.team)
+        players = []
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            players.append(bs.get_date_string())
+        return players
 
+    def get_assists(self):
+        """
+        Gets a list of player assists of the team box score.
+
+        :return: Player assists
+        :rtype: list
+        """
+        players = []
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            players.append(bs.assists)
+        return players
+
+    def get_made_field_goals(self):
+        """
+        Gets a list of player made field goals of the team box score.
+
+        :return: Player made field goals
+        :rtype: list
+        """
+        players = []
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            players.append(bs.made_fg)
+        return players
+
+    def get_made_three_point_field_goals(self):
+        """
+        Gets a list of player made three point field goals of the team box score.
+
+        :return: Player made three point field goals
+        :rtype: list
+        """
+        players = []
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            players.append(bs.made_threes)
+        return players
+
+    def get_made_free_throws(self):
+        """
+        Gets a list of player made free throws of the team box score.
+
+        :return: Player made free throws
+        :rtype: list
+        """
+        players = []
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            players.append(bs.made_ft)
+        return players
+
+    def get_offensive_rebounds(self):
+        """
+        Gets a list of player offensive rebounds of the team box score.
+
+        :return: Player offensive rebounds
+        :rtype: list
+        """
+        players = []
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            players.append(bs.offensive_rebounds)
+        return players
+
+    def get_defensive_rebounds(self):
+        """
+        Gets a list of player defensive rebounds of the team box score.
+
+        :return: Player defensive rebounds
+        :rtype: list
+        """
+        players = []
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            players.append(bs.defensive_rebounds)
+        return players
+
+    def get_teams(self):
+        """
+        Gets a list of player team of the team box score.
+
+        :return: Player teams
+        :rtype: list
+        """
+        players = []
+        for bs in sorted(self.player_box_scores, key=lambda x: x.player_name):
+            players.append(bs.player_team)
+        return players
 
 # ----------------------------------------------------------------------------------------------------------------------
 # End

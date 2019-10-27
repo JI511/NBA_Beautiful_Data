@@ -8,6 +8,7 @@ from collections import OrderedDict
 from basketball_reference_web_scraper import client
 from basketball_reference_web_scraper.data import Team
 from box_score import BoxScore
+from constants import Vars
 
 
 def get_player_box_score(name, date_obj=None, timeout=3):
@@ -130,11 +131,10 @@ def check_supported_stats(stats):
     :return: Indicates if all provided stats are acceptable.
     :rtype: bool
     """
-    supported_stats = ['points', 'rebounds', 'assists', 'made_field_goals', 'made_three_point_field_goals',
-                       'made_free_throws', ]
+
     valid = True
     for stat in stats:
-        if stat not in supported_stats:
+        if stat not in Vars.supported_stats:
             valid = False
             break
     return valid

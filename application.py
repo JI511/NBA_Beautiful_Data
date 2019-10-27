@@ -8,6 +8,7 @@ import os
 import pandas as pd
 import analytics_API as Api
 from box_score import BoxScore
+from constants import Vars
 from team_box_score import TeamBoxScore
 
 
@@ -33,6 +34,9 @@ class Application(object):
         # print(box_score.to_string())
 
         team_box_scores = []
+        data = {}
+        for stat in Vars.supported_stats:
+            data[stat] = []
         daily_box_scores, found_date = Api.get_daily_box_scores(date_obj=date)
         for team in daily_box_scores.keys():
             team_box_scores.append(
@@ -40,14 +44,21 @@ class Application(object):
                              team_box_score=[],
                              team_name=team,
                              date=found_date))
-            # print(team_box_scores[-1].to_string())
-            team_box_scores[-1].create_points_graph()
-            break
-        data = {
-            'player_name': team_box_scores[-1].get_players(),
-            'points': team_box_scores[-1].get_points(),
-            'rebounds': team_box_scores[-1].get_rebounds()
-        }
+            # team_box_scores[-1].create_points_graph()
+            # break
+            for tbs in team_box_scores:
+                data['player_name'].extend(tbs.get_players())
+                data['points'].extend(tbs.get_points())
+                data['rebounds'].extend(tbs.get_players())
+                data['assists'].extend(tbs.get_assists())
+                data['made_field_goals'].extend(tbs.get_made_field_goals())
+                data['made_three_point_field_goals'].extend(tbs.get_made_three_point_field_goals())
+                data['made_free_throws'].extend(tbs.get_made_free_throws())
+                data['offensive_rebounds'].extend(tbs.get_offensive_rebounds())
+                data['defensive_rebounds'].extend(tbs.get_defensive_rebounds())
+                data['team'].extend(tbs.get_teams())
+                data['date'].extend(tbs.get_dates())
+
         print(data)
         df = pd.DataFrame(data)
         if not os.path.exists('test.csv'):
