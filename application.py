@@ -22,13 +22,14 @@ class Application(object):
         """
         self.player = 'LeBron James'.lower()
 
-    def run(self):
+    def run(self, date=None):
         """
         Runs the application.
+
+        :param datetime.datetime date: The date to attempt searching.
         """
-        # print("The Latest box score for Lebron James")
-        # date = datetime.datetime.today()
-        date = datetime.datetime(year=2019, month=10, day=26)
+        if date is None:
+            date = datetime.datetime.today()
 
         # temp_bs, fd = Api.get_player_box_score(name=self.player, date_obj=date)
         # box_score = BoxScore(temp_bs, fd)
