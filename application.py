@@ -28,6 +28,7 @@ class Application(object):
 
         :param datetime.datetime date: The date to attempt searching.
         """
+        # todo create logger
         if date is None:
             date = datetime.datetime.today()
 
