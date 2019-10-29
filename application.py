@@ -18,15 +18,17 @@ class Application(object):
         Setup for the application.
         """
         self.player = 'LeBron James'.lower()
-        logging.basicConfig(filename='log.ini', level=logging.INFO)
         self.logger = logging.getLogger(__name__)
 
-    def run(self, date=False):
+    def run(self, date=False, should_log=False):
         """
         Runs the application.
 
         :param datetime.datetime date: The date to attempt searching.
+        :param bool should_log: Indicates if logging should be used.
         """
+        if should_log:
+            logging.basicConfig(filename='log.ini', level=logging.INFO)
         if not date:
             date = datetime.datetime.now()
         self.logger.info("Current datetime %s" % date)

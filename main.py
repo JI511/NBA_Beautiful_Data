@@ -20,7 +20,7 @@ if args.yesterday:
     date -= datetime.timedelta(days=1)
 
 app = application.Application()
-app.run(date=date)
+app.run(date=date, should_log=args.log)
 
 
 # ----------------------------------------------------------------------------------------------------------------------
