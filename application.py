@@ -4,11 +4,8 @@
 
 # imports
 import datetime
-import os
-import pandas as pd
+import logging
 import analytics_API as Api
-from box_score import BoxScore
-from constants import Vars
 from team_box_score import TeamBoxScore
 
 
@@ -21,6 +18,8 @@ class Application(object):
         Setup for the application.
         """
         self.player = 'LeBron James'.lower()
+        logging.basicConfig(filename='log.ini', level=logging.INFO)
+        self.logger = logging.getLogger(__name__)
 
     def run(self, date=None):
         """
@@ -28,9 +27,9 @@ class Application(object):
 
         :param datetime.datetime date: The date to attempt searching.
         """
-        # todo create logger
         if date is None:
-            date = datetime.datetime.today()
+            date = datetime.datetime.now()
+        self.logger.info("Current datetime %s" % date)
 
         # temp_bs, fd = Api.get_player_box_score(name=self.player, date_obj=date)
         # box_score = BoxScore(temp_bs, fd)
@@ -47,8 +46,9 @@ class Application(object):
             # team_box_scores[-1].create_points_graph()
 
         my_csv = 'player_box_scores.csv'
-        df = Api.get_existing_data_frame(my_csv)
-        new_df = Api.create_data_frame_from_team_box_scores(team_box_scores=team_box_scores)
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        new_df = Api.create_data_frame_from_team_box_scores(team_box_scores=team_box_scores,
+                                                            logger=self.logger)
         if df is None:
             print('There was not an existing data frame.')
             df = new_df

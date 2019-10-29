@@ -143,28 +143,32 @@ def check_supported_stats(stats):
     return valid
 
 
-def get_existing_data_frame(csv_path):
+def get_existing_data_frame(csv_path, logger):
     """
     Determines if a data frame already exists, and returns the data frame if true. Returns None if does not exist.
 
     :param str csv_path: Path of the csv file.
+    :param logger: Instance of logger object.
     :return: Data frame if exists, None otherwise
     :rtype: pd.DataFrame
     """
     df = None
     if os.path.exists(csv_path):
+        logger.info("Existing data frame found.")
         df = pd.read_csv(csv_path, index_col=0)
     return df
 
 
-def create_data_frame_from_team_box_scores(team_box_scores):
+def create_data_frame_from_team_box_scores(team_box_scores, logger):
     """
     Creates a pandas data frame object from a list of team box score objects.
 
     :param list team_box_scores: Team box score objects
+    :param logger: Instance of logger object
     :return: Pandas data frame
     :rtype: pd.DataFrame
     """
+    logger.info("Appending new data frame from %s teams" % len(team_box_scores))
     data = {}
     index = []
     for stat in Vars.supported_stats:
