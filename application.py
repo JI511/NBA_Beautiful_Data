@@ -31,7 +31,7 @@ class Application(object):
             logging.basicConfig(filename='log.ini', level=logging.INFO)
         if not date:
             date = datetime.datetime.now()
-        self.logger.info("Current datetime %s" % date)
+        self.logger.info("Executing datetime: %s" % date)
 
         # temp_bs, fd = Api.get_player_box_score(name=self.player, date_obj=date)
         # box_score = BoxScore(temp_bs, fd)
