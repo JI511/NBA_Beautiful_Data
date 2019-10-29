@@ -55,9 +55,14 @@ class Application(object):
             print('There was not an existing data frame.')
             df = new_df
         else:
-            print('Appending new data frame.')
+            print('Appending new data frame of shape: %s' % str(new_df.shape))
+            self.logger.info('Appending new data frame of shape: %s' % str(new_df.shape))
             temp_df = df.append(new_df, sort=False)
+            temp_size = temp_df.shape[0]
             temp_df.drop_duplicates(inplace=True)
+            temp_size = temp_size - temp_df.shape[0]
+            self.logger.info('Dropped %s duplicates' % temp_size)
+            print('Dropped %s duplicates' % temp_size)
             df = temp_df
             print(df.shape)
         df.to_csv(my_csv)
