@@ -21,13 +21,13 @@ class Application(object):
         logging.basicConfig(filename='log.ini', level=logging.INFO)
         self.logger = logging.getLogger(__name__)
 
-    def run(self, date=None):
+    def run(self, date=False):
         """
         Runs the application.
 
         :param datetime.datetime date: The date to attempt searching.
         """
-        if date is None:
+        if not date:
             date = datetime.datetime.now()
         self.logger.info("Current datetime %s" % date)
 
