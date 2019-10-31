@@ -6,10 +6,10 @@
 import datetime
 import os
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 from collections import OrderedDict
 from basketball_reference_web_scraper import client
-from basketball_reference_web_scraper.data import Team
-from box_score import BoxScore
 from constants import Vars
 
 
@@ -211,6 +211,31 @@ def convert_to_minutes(seconds_played):
     """
     minutes = seconds_played / 60.0
     return round(minutes, 2)
+
+
+def create_scatter_plot_with_trend_line(x_key, y_key, df, save_path=None, show=False):
+    """
+    Creates a scatter plot for two different series of a pandas data frame.
+
+    :param str x_key: The column name in the data frame to use for the x axis.
+    :param str y_key: The column name in the data frame to use for the x axis.
+    :param df: The data frame object.
+    :param str save_path: The path to save the png file created.
+    :param bool show: Indicates if the png should be shown during execution.
+    :return: The save path of the created png, otherwise None.
+    """
+    plt.rcParams.update({'font.size': 20, 'figure.figsize': (10, 8)})
+    df.plot(kind='scatter', x=x_key, y=y_key, title='%s vs %s' % (x_key, y_key), grid=True)
+    x = df[x_key]
+    y = df[y_key]
+    z = np.polyfit(x, y, 1)
+    p = np.poly1d(z)
+    plt.plot(x, p(x), "r--")
+    if save_path is not None:
+        if os.path.isdir(save_path):
+            plt.savefig(os.path.join(save_path, '%s_VS_%s' % (x_key, y_key)))
+    if show:
+        plt.show()
 
 # ----------------------------------------------------------------------------------------------------------------------
 # End
