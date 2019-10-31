@@ -5,6 +5,8 @@
 # imports
 import datetime
 import logging
+import numpy as np
+import matplotlib.pyplot as plt
 import analytics_API as Api
 from team_box_score import TeamBoxScore
 
@@ -65,7 +67,19 @@ class Application(object):
             print('Dropped %s duplicates' % temp_size)
             df = temp_df
             print(df.shape)
+        df['minutes_played'] = df['seconds_played'].apply(Api.convert_to_minutes)
         df.to_csv(my_csv)
+
+        # plt.rcParams.update({'font.size': 20, 'figure.figsize': (10, 8)})
+        # x_key = 'minutes_played'
+        # y_key = 'game_score'
+        # df.plot(kind='scatter', x=x_key, y=y_key, title='%s vs %s' % (x_key, y_key), grid=True)
+        # x = df[x_key]
+        # y = df[y_key]
+        # z = np.polyfit(x, y, 1)
+        # p = np.poly1d(z)
+        # plt.plot(x, p(x), "r--")
+        # plt.show()
 
 
 # ----------------------------------------------------------------------------------------------------------------------

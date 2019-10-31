@@ -202,6 +202,16 @@ def create_data_frame_from_team_box_scores(team_box_scores, logger):
     return df
 
 
+def convert_to_minutes(seconds_played):
+    """
+    Converts seconds into minutes.
+
+    :param seconds_played:
+    :return:
+    """
+    minutes = seconds_played / 60.0
+    return round(minutes, 2)
+
 # ----------------------------------------------------------------------------------------------------------------------
 # End
 # ----------------------------------------------------------------------------------------------------------------------
