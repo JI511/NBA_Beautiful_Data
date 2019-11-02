@@ -198,6 +198,10 @@ def create_data_frame_from_team_box_scores(team_box_scores, logger):
         data['game_score'].extend(tbs.get_game_scores())
         data['date'].extend(tbs.get_dates())
 
+    if data['team']:
+        teams = list(set(data['team']))
+        for team in teams:
+            logger.info('\t%s' % team)
     df = pd.DataFrame(data, index=index)
     return df
 
