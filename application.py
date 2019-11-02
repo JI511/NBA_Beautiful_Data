@@ -75,7 +75,7 @@ class Application(object):
                                                                            x['attempted_three_point_field_goals'],
                                                                            x['attempted_free_throws']),
                                            axis=1)
-        df.to_csv(my_csv)
+            df.to_csv(my_csv)
 
         if plot:
             x_key = 'minutes_played'
