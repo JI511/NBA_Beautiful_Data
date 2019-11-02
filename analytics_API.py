@@ -213,6 +213,25 @@ def convert_to_minutes(seconds_played):
     return round(minutes, 2)
 
 
+def get_true_shooting(points, fga, tpfga, fta):
+    """
+    Calculates true shooting percentage.
+
+    :param int points: Points
+    :param int fga: Field goals attempted
+    :param int tpfga: Three point field goals attempted
+    :param int fta: Free throws attempted
+    :return:  True shooting percentage
+    :rtype: float
+    """
+    try:
+        ts = points / (2.0 * ((fga + tpfga) + 0.44 * fta))
+    except ZeroDivisionError:
+        print(points, fga, tpfga, fta)
+        ts = 0
+    return round(ts, 3)
+
+
 def create_scatter_plot_with_trend_line(x_key, y_key, df, save_path=None, show=False):
     """
     Creates a scatter plot for two different series of a pandas data frame.

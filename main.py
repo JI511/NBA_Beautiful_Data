@@ -18,6 +18,8 @@ args = parser.parse_args()
 date = datetime.datetime.now()
 if args.yesterday:
     date -= datetime.timedelta(days=1)
+else:
+    date = False
 
 app = application.Application()
 app.run(date=date, should_log=args.log)

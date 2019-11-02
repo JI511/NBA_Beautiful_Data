@@ -5,7 +5,6 @@
 # imports
 import datetime
 import logging
-import os
 import analytics_API as Api
 from team_box_score import TeamBoxScore
 
@@ -46,7 +45,6 @@ class Application(object):
                                                 team_box_score=[],
                                                 team_name=team,
                                                 date=found_date))
-            # team_box_scores[-1].create_points_graph()
 
         my_csv = 'player_box_scores.csv'
         df = Api.get_existing_data_frame(my_csv, logger=self.logger)
@@ -67,6 +65,11 @@ class Application(object):
             df = temp_df
             print(df.shape)
         df['minutes_played'] = df['seconds_played'].apply(Api.convert_to_minutes)
+        df['true_shooting'] = df.apply(lambda x: Api.get_true_shooting(x['points'],
+                                                                       x['attempted_field_goals'],
+                                                                       x['attempted_three_point_field_goals'],
+                                                                       x['attempted_free_throws']),
+                                       axis=1)
         df.to_csv(my_csv)
 
         # x_key = 'minutes_played'
