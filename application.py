@@ -63,18 +63,20 @@ class Application(object):
                 self.logger.info('Appending new data frame of shape: %s' % str(new_df.shape))
                 temp_df = df.append(new_df, sort=False)
                 temp_size = temp_df.shape[0]
+                # add new columns with ops from existing data
+                temp_df['minutes_played'] = temp_df['seconds_played'].apply(Api.convert_to_minutes)
+                temp_df['true_shooting'] = temp_df.apply(
+                    lambda x: Api.get_true_shooting(x['points'],
+                                                    x['attempted_field_goals'],
+                                                    x['attempted_three_point_field_goals'],
+                                                    x['attempted_free_throws']),
+                    axis=1)
                 temp_df.drop_duplicates(inplace=True)
                 temp_size = temp_size - temp_df.shape[0]
                 self.logger.info('Dropped %s duplicates' % temp_size)
                 print('Dropped %s duplicates' % temp_size)
                 df = temp_df
                 print(df.shape)
-            df['minutes_played'] = df['seconds_played'].apply(Api.convert_to_minutes)
-            df['true_shooting'] = df.apply(lambda x: Api.get_true_shooting(x['points'],
-                                                                           x['attempted_field_goals'],
-                                                                           x['attempted_three_point_field_goals'],
-                                                                           x['attempted_free_throws']),
-                                           axis=1)
             df.to_csv(my_csv)
 
         if plot:
