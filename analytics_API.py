@@ -231,7 +231,7 @@ def get_true_shooting(points, fga, tpfga, fta):
     return round(ts, 3)
 
 
-def create_scatter_plot_with_trend_line(x_key, y_key, df, save_path=None, show=False):
+def create_scatter_plot_with_trend_line(x_key, y_key, df, save_path=None, show_plot=False):
     """
     Creates a scatter plot for two different series of a pandas data frame.
 
@@ -239,7 +239,7 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, save_path=None, show=F
     :param str y_key: The column name in the data frame to use for the x axis.
     :param df: The data frame object.
     :param str save_path: The path to save the png file created.
-    :param bool show: Indicates if the png should be shown during execution.
+    :param bool show_plot: Indicates if the png should be shown during execution.
     :return: The save path of the created png, otherwise None.
     """
     fig, ax = plt.subplots(figsize=(10, 6))
@@ -252,8 +252,9 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, save_path=None, show=F
                  grid=True, ax=ax)
     ax.set_xlabel(x_key.title().replace('_', ' '))
     ax.set_ylabel(y_key.title().replace('_', ' '))
-    if series_size > 8:
-        thresh = sorted(temp_df[y_key].to_list())[-8]
+    # add point labels
+    if series_size > 10:
+        thresh = sorted(temp_df[y_key].to_list())[-10]
     else:
         thresh = 0
     for k, v in temp_df.iterrows():
@@ -261,16 +262,21 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, save_path=None, show=F
             temp_split = k.split(' ')
             name = '%s. %s' % (temp_split[0][:1], temp_split[1])
             ax.annotate(name, v)
+
+    # create trend line
     x = df[x_key]
     y = df[y_key]
     z = np.polyfit(x, y, 1)
     p = np.poly1d(z)
     plt.plot(x, p(x), "r--")
+    # makes things fit on graph window
     plt.tight_layout()
+
+    # handle output
     if save_path is not None:
         if os.path.isdir(save_path):
             plt.savefig(os.path.join(save_path, '%s_VS_%s' % (x_key, y_key)))
-    if show:
+    if show_plot:
         plt.show()
 
 
