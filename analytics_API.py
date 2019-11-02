@@ -227,7 +227,6 @@ def get_true_shooting(points, fga, tpfga, fta):
     try:
         ts = points / (2.0 * ((fga + tpfga) + 0.44 * fta))
     except ZeroDivisionError:
-        print(points, fga, tpfga, fta)
         ts = 0
     return round(ts, 3)
 
@@ -243,18 +242,37 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, save_path=None, show=F
     :param bool show: Indicates if the png should be shown during execution.
     :return: The save path of the created png, otherwise None.
     """
-    plt.rcParams.update({'font.size': 20, 'figure.figsize': (10, 8)})
-    df.plot(kind='scatter', x=x_key, y=y_key, title='%s vs %s' % (x_key, y_key), grid=True)
+    fig, ax = plt.subplots(figsize=(10, 6))
+    temp_df = df[[x_key, y_key]]
+    series_size = temp_df[y_key].shape[0]
+    temp_df.plot(kind='scatter', x=x_key, y=y_key,
+                 title='%s vs %s (%s samples)' % (x_key.title().replace('_', ' '),
+                                                  y_key.title().replace('_', ' '),
+                                                  series_size),
+                 grid=True, ax=ax)
+    ax.set_xlabel(x_key.title().replace('_', ' '))
+    ax.set_ylabel(y_key.title().replace('_', ' '))
+    if series_size > 8:
+        thresh = sorted(temp_df[y_key].to_list())[-8]
+    else:
+        thresh = 0
+    for k, v in temp_df.iterrows():
+        if v.values[1] >= thresh:
+            temp_split = k.split(' ')
+            name = '%s. %s' % (temp_split[0][:1], temp_split[1])
+            ax.annotate(name, v)
     x = df[x_key]
     y = df[y_key]
     z = np.polyfit(x, y, 1)
     p = np.poly1d(z)
     plt.plot(x, p(x), "r--")
+    plt.tight_layout()
     if save_path is not None:
         if os.path.isdir(save_path):
             plt.savefig(os.path.join(save_path, '%s_VS_%s' % (x_key, y_key)))
     if show:
         plt.show()
+
 
 # ----------------------------------------------------------------------------------------------------------------------
 # End

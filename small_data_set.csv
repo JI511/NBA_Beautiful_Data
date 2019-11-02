@@ -1,0 +1,4 @@
+,points,rebounds,assists,date,made_field_goals,made_three_point_field_goals,made_free_throws,offensive_rebounds,defensive_rebounds,team,location,opponent,outcome,seconds_played,attempted_three_point_field_goals,attempted_free_throws,attempted_field_goals,steals,blocks,turnovers,personal_fouls,game_score,minutes_played,true_shooting
+Anthony Davis,25,10,5,19_10_22,8,0,9,3,7,LOS_ANGELES_LAKERS,AWAY,LOS_ANGELES_CLIPPERS,LOSS,2242,2,14,21,1,2,3,3,17.4,37.37,0.429
+Avery Bradley,8,3,0,19_10_22,3,2,0,0,3,LOS_ANGELES_LAKERS,AWAY,LOS_ANGELES_CLIPPERS,LOSS,1442,5,0,7,0,0,2,3,2,24.03,0.333
+Danny Green,28,7,0,19_10_22,10,7,1,1,6,LOS_ANGELES_LAKERS,AWAY,LOS_ANGELES_CLIPPERS,LOSS,1940,9,1,14,2,1,0,3,26.2,32.33,0.597

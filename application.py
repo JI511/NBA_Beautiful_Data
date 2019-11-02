@@ -5,6 +5,7 @@
 # imports
 import datetime
 import logging
+import os
 import analytics_API as Api
 from team_box_score import TeamBoxScore
 
@@ -47,6 +48,7 @@ class Application(object):
                                                 date=found_date))
 
         my_csv = 'player_box_scores.csv'
+        # my_csv = 'small_data_set.csv'
         df = Api.get_existing_data_frame(my_csv, logger=self.logger)
         new_df = Api.create_data_frame_from_team_box_scores(team_box_scores=team_box_scores,
                                                             logger=self.logger)
