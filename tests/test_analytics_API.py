@@ -86,6 +86,21 @@ class TestAnalyticsApi(unittest.TestCase):
         self.assertEqual(len(team_dict[keys[0]]), 10)
         self.assertEqual([date.day, date.month, date.year], [test_date.day, test_date.month, test_date.year])
 
+    # ------------------------------------------------------------------------------------------------------------------
+    # create_scatter_plot_with_trend_line tests
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_create_scatter_plot_with_trend_line_nominal(self):
+        """
+        The function `create_scatter_plot_with_trend_line` shall create and save a scatter plot.
+        """
+        my_csv = 'small_data_set.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        Api.create_scatter_plot_with_trend_line(x_key='minutes_played',
+                                                y_key='points',
+                                                df=df,
+                                                save_path=self.logs_dir)
+        self.assertTrue(os.path.exists(os.path.join(self.logs_dir, 'plots', 'minutes_played_VS_points.png')))
+
 # ----------------------------------------------------------------------------------------------------------------------
 #    End
 # ----------------------------------------------------------------------------------------------------------------------
