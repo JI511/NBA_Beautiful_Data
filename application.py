@@ -21,6 +21,16 @@ class Application(object):
         self.player = 'LeBron James'.lower()
         self.logger = logging.getLogger(__name__)
 
+    def run_with_date_range(self, start_date, end_date):
+        """
+        Create a csv file of player box scores from a date range.
+
+        :param datetime.datetime start_date: The date to begin searching.
+        :param datetime.datetime end_date: The date to end searching, exclusive, meaning this date will not be searched
+            and will only trigger ending.
+        """
+        # todo
+
     def run(self, date=False, should_log=False, plot=True, gather_new=False):
         """
         Runs the application.
