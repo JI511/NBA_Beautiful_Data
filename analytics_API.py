@@ -13,11 +13,12 @@ from basketball_reference_web_scraper import client
 from constants import Vars
 
 
-def get_player_box_score(name, date_obj=None, timeout=3):
+def get_player_box_score(name, logger, date_obj=None, timeout=3):
     """
     Gets the box score for the desired player.
 
     :param str name: Name of the player to search for.
+    :param logger: Logging object.
     :param datetime.datetime date_obj: Datetime object for starting day to search.
     :param int timeout: Number of days to search before giving up.
     :return: Box score for the player if found.
@@ -29,13 +30,11 @@ def get_player_box_score(name, date_obj=None, timeout=3):
     bs = None
     while True:
         if timeout > 0:
-            print('Attempting date: %s' % date_obj.strftime('%y-%m-%d'))
+            logger.info('Attempting date: %s' % date_obj.strftime('%y-%m-%d'))
             found = False
             box_scores = client.player_box_scores(day=date_obj.day, month=date_obj.month, year=date_obj.year)
-            print('Total players on this date: %s' % len(box_scores))
             for box_score in box_scores:
                 if name in box_score['name'].lower():
-                    print(box_score.keys())
                     bs = box_score
                     found = True
                     break
@@ -44,7 +43,7 @@ def get_player_box_score(name, date_obj=None, timeout=3):
             date_obj -= datetime.timedelta(days=1)
             timeout -= 1
         else:
-            print("Timeout reached.")
+            logger.info("Timeout reached.")
             break
     return bs, date_obj
 

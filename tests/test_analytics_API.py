@@ -8,6 +8,7 @@ import tempfile
 import os
 import shutil
 import logging
+import datetime
 
 import analytics_API as Api
 
@@ -30,17 +31,41 @@ class TestAnalyticsApi(unittest.TestCase):
         if os.path.exists(self.logs_dir):
             shutil.rmtree(self.logs_dir)
 
-    def test_nominal(self):
+    # ------------------------------------------------------------------------------------------------------------------
+    # get_player_box_score tests
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_get_player_box_score_nominal(self):
         """
+        The function `get_player_box_score` shall build a player box score date when given a date that the desired
+        player played on.
+        """
+        test_date = datetime.datetime(year=2019, month=10, day=22)
+        bs, date = Api.get_player_box_score(name='LeBron James', logger=self.logger,
+                                            date_obj=test_date)
+        self.assertEqual(bs['name'], 'LeBron James')
+        self.assertEqual(bs['team'].name, 'LOS_ANGELES_LAKERS')
+        self.assertEqual([date.day, date.month, date.year], [test_date.day, test_date.month, test_date.year])
 
+    def test_get_player_box_score_cycle_date(self):
         """
-        self.assertTrue(True)
+        The function `get_player_box_score` shall iterate over 3 decreasing dates by default to find the player box
+        score if the date provided does not yield a result.
+        """
+        test_date = datetime.datetime(year=2019, month=10, day=23)
+        bs, date = Api.get_player_box_score(name='LeBron James', logger=self.logger,
+                                            date_obj=test_date)
+        self.assertEqual(bs['name'], 'LeBron James')
+        self.assertEqual(bs['team'].name, 'LOS_ANGELES_LAKERS')
+        self.assertEqual([date.day, date.month, date.year], [test_date.day - 1, test_date.month, test_date.year])
 
-    def test_nominal_2(self):
+    def test_get_player_box_score_not_found(self):
         """
-
+        The function `get_player_box_score` shall return None if the player box score data is not found.
         """
-        self.assertTrue(True)
+        test_date = datetime.datetime(year=2019, month=10, day=21)
+        bs, date = Api.get_player_box_score(name='LeBron James', logger=self.logger,
+                                            date_obj=test_date)
+        self.assertEqual(bs, None)
 
 
 # ----------------------------------------------------------------------------------------------------------------------
