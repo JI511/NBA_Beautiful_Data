@@ -67,6 +67,24 @@ class TestAnalyticsApi(unittest.TestCase):
                                             date_obj=test_date)
         self.assertEqual(bs, None)
 
+    # ------------------------------------------------------------------------------------------------------------------
+    # get_team_box_score tests
+    # ------------------------------------------------------------------------------------------------------------------
+
+    # ------------------------------------------------------------------------------------------------------------------
+    # get_daily_box_scores tests
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_get_daily_box_scores_nominal(self):
+        """
+        The function `get_daily_box_scores` shall get all player box scores for a specified day grouped by team.
+        """
+        test_date = datetime.datetime(year=2019, month=10, day=22)
+        team_dict, date = Api.get_daily_box_scores(date_obj=test_date)
+        keys = [key for key in team_dict.keys()]
+        self.assertEqual(keys, ['LOS_ANGELES_LAKERS', 'LOS_ANGELES_CLIPPERS',
+                         'NEW_ORLEANS_PELICANS', 'TORONTO_RAPTORS'])
+        self.assertEqual(len(team_dict[keys[0]]), 10)
+        self.assertEqual([date.day, date.month, date.year], [test_date.day, test_date.month, test_date.year])
 
 # ----------------------------------------------------------------------------------------------------------------------
 #    End

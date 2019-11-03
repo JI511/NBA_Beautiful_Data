@@ -48,7 +48,7 @@ def get_player_box_score(name, logger, date_obj=None, timeout=3):
     return bs, date_obj
 
 
-def get_team_box_scores(team, date_obj=None, timeout=3):
+def get_team_box_score(team, date_obj=None, timeout=3):
     """
     Gets the team box score data for a specific day.
 
