@@ -276,13 +276,17 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, save_path=None, show_p
     plt.tight_layout()
 
     # handle output
+    plot_path = None
     if save_path is not None:
         if os.path.isdir(save_path):
             if not os.path.exists(os.path.join(save_path, 'plots')):
                 os.mkdir(os.path.join(save_path, 'plots'))
-            plt.savefig(os.path.join(save_path, 'plots', '%s_VS_%s' % (x_key, y_key)))
+            ymd = datetime.datetime.now().strftime("%y%m%d")
+            plot_path = os.path.join(save_path, 'plots', '%s_VS_%s_%s' % (x_key, y_key, ymd))
+            plt.savefig(plot_path)
     if show_plot:
         plt.show()
+    return plot_path
 
 
 # ----------------------------------------------------------------------------------------------------------------------

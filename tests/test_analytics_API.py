@@ -95,11 +95,11 @@ class TestAnalyticsApi(unittest.TestCase):
         """
         my_csv = 'small_data_set.csv'
         df = Api.get_existing_data_frame(my_csv, logger=self.logger)
-        Api.create_scatter_plot_with_trend_line(x_key='minutes_played',
-                                                y_key='points',
-                                                df=df,
-                                                save_path=self.logs_dir)
-        self.assertTrue(os.path.exists(os.path.join(self.logs_dir, 'plots', 'minutes_played_VS_points.png')))
+        plot_path = Api.create_scatter_plot_with_trend_line(x_key='minutes_played',
+                                                            y_key='points',
+                                                            df=df,
+                                                            save_path=self.logs_dir)
+        self.assertTrue(os.path.exists('%s.png' % plot_path))
 
 # ----------------------------------------------------------------------------------------------------------------------
 #    End
