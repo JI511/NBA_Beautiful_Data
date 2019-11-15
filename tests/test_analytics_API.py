@@ -87,6 +87,21 @@ class TestAnalyticsApi(unittest.TestCase):
         self.assertEqual([date.day, date.month, date.year], [test_date.day, test_date.month, test_date.year])
 
     # ------------------------------------------------------------------------------------------------------------------
+    # get_team_date_df tests
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_get_team_date_nominal(self):
+        """
+        The function `get_team_date` shall retrieve a pandas.DataFrame object containing the player box score
+        information of a given day and team.
+        """
+        my_csv = 'small_data_set.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        team_df = Api.get_team_date_df(df, 'CHICAGO_BULLS', datetime.datetime(day=23, month=10, year=1996))
+        self.assertEqual(team_df.shape[0], 0)
+        team_df = Api.get_team_date_df(df, 'CHICAGO_BULLS', datetime.datetime(day=22, month=10, year=1996))
+        self.assertEqual(team_df.shape[0], 1)
+
+    # ------------------------------------------------------------------------------------------------------------------
     # create_scatter_plot_with_trend_line tests
     # ------------------------------------------------------------------------------------------------------------------
     def test_create_scatter_plot_with_trend_line_nominal(self):

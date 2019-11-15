@@ -125,6 +125,35 @@ def get_teams_played_on_date(date_obj=None, timeout=1):
     return teams
 
 
+def convert_to_minutes(seconds_played):
+    """
+    Converts seconds into minutes.
+
+    :param seconds_played:
+    :return:
+    """
+    minutes = seconds_played / 60.0
+    return round(minutes, 2)
+
+
+def get_true_shooting(points, fga, tpfga, fta):
+    """
+    Calculates true shooting percentage.
+
+    :param int points: Points
+    :param int fga: Field goals attempted
+    :param int tpfga: Three point field goals attempted
+    :param int fta: Free throws attempted
+    :return:  True shooting percentage
+    :rtype: float
+    """
+    try:
+        ts = points / (2.0 * ((fga + tpfga) + 0.44 * fta))
+    except ZeroDivisionError:
+        ts = 0
+    return round(ts, 3)
+
+
 def check_supported_stats(stats):
     """
     Checks a list of strings to determine if the stat type is supported.
@@ -140,6 +169,10 @@ def check_supported_stats(stats):
             valid = False
             break
     return valid
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Pandas interactions
+# ----------------------------------------------------------------------------------------------------------------------
 
 
 def get_existing_data_frame(csv_path, logger):
@@ -205,33 +238,20 @@ def create_data_frame_from_team_box_scores(team_box_scores, logger):
     return df
 
 
-def convert_to_minutes(seconds_played):
+def get_team_date_df(df, team, date):
     """
-    Converts seconds into minutes.
+    Attempts to make a pandas data frame of all player box scores on a certain day.
 
-    :param seconds_played:
-    :return:
+    :param pandas.DataFrame df: The data frame to search.
+    :param str team: The team to search for.
+    :param datetime.datetime date: The date to search on.
+    :return: Team data frame if found
     """
-    minutes = seconds_played / 60.0
-    return round(minutes, 2)
-
-
-def get_true_shooting(points, fga, tpfga, fta):
-    """
-    Calculates true shooting percentage.
-
-    :param int points: Points
-    :param int fga: Field goals attempted
-    :param int tpfga: Three point field goals attempted
-    :param int fta: Free throws attempted
-    :return:  True shooting percentage
-    :rtype: float
-    """
-    try:
-        ts = points / (2.0 * ((fga + tpfga) + 0.44 * fta))
-    except ZeroDivisionError:
-        ts = 0
-    return round(ts, 3)
+    team_df = None
+    if isinstance(date, datetime.datetime):
+        converted_date = date.strftime('%y_%m_%d')
+        team_df = df[(df['date'] == converted_date) & (df['team'] == team)]
+    return team_df
 
 
 def create_scatter_plot_with_trend_line(x_key, y_key, df, save_path=None, show_plot=False):
