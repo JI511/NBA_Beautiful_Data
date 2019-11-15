@@ -309,6 +309,26 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, save_path=None, show_p
     return plot_path
 
 
+def create_bar_plot(df, bar_items):
+    """
+    todo
+
+    :param pandas.DataFrame df:
+    :param list bar_items:
+    :return:
+    """
+    fig, ax = plt.subplots(figsize=(10, 8))
+    margin_bottom = np.zeros(df.shape[0])
+    colors = ['#17408B', '#C9082A', '#552084', '#FDBA21']
+    for index, item in enumerate(bar_items):
+        values = df[item].to_list()
+        df.plot.bar(y=item, ax=ax, stacked=True, bottom=margin_bottom, color=colors[index], rot=45, label=item)
+        margin_bottom += values
+
+    plt.tight_layout()
+    plt.show()
+
+
 # ----------------------------------------------------------------------------------------------------------------------
 # End
 # ----------------------------------------------------------------------------------------------------------------------

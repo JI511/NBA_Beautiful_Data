@@ -8,6 +8,7 @@ import logging
 import os
 import analytics_API as Api
 from team_box_score import TeamBoxScore
+from basketball_reference_web_scraper.data import Team
 
 
 class Application(object):
@@ -25,11 +26,14 @@ class Application(object):
         """
         Create a csv file of player box scores from a date range.
 
-        :param datetime.datetime start_date: The date to begin searching.
-        :param datetime.datetime end_date: The date to end searching, exclusive, meaning this date will not be searched
+        :param str start_date: The date to begin searching.
+        :param str end_date: The date to end searching, exclusive, meaning this date will not be searched
             and will only trigger ending.
         """
-        # todo
+        logging.basicConfig(filename='date_range_log.ini', level=logging.INFO)
+        start_split = start_date.split('_')
+        start = datetime.datetime(year=int(start_split[0]),
+                                  month=int(start_split[1]), day=int(start_split[2]))
 
     def run(self, date=False, should_log=False, plot=True, gather_new=False):
         """
@@ -45,6 +49,7 @@ class Application(object):
         if not date:
             date = datetime.datetime.now()
         self.logger.info("Executing datetime: %s" % date)
+        print(date)
 
         # temp_bs, fd = Api.get_player_box_score(name=self.player, date_obj=date)
         # box_score = BoxScore(temp_bs, fd)
@@ -90,10 +95,13 @@ class Application(object):
             df.to_csv(my_csv)
 
         if plot:
-            x_key = 'minutes_played'
-            y_key = 'game_score'
-            Api.create_scatter_plot_with_trend_line(x_key=x_key, y_key=y_key, df=df,
-                                                    show_plot=True, save_path=os.getcwd())
+            # x_key = 'minutes_played'
+            # y_key = 'game_score'
+            # Api.create_scatter_plot_with_trend_line(x_key=x_key, y_key=y_key, df=df,
+            #                                         show_plot=True, save_path=os.getcwd())
+            items = ['points', 'rebounds', 'assists']
+            Api.create_bar_plot(df=Api.get_team_date_df(df, team=Team.LOS_ANGELES_LAKERS.name, date=date),
+                                bar_items=items)
 
 
 # ----------------------------------------------------------------------------------------------------------------------
