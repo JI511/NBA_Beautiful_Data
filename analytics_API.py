@@ -170,6 +170,16 @@ def check_supported_stats(stats):
             break
     return valid
 
+
+def convert_team_name(team):
+    """
+    Converts team string into proper casing format
+
+    :param str team: Team enum name
+    :return: Converted string
+    """
+    return team.title().replace('_', ' ')
+
 # ----------------------------------------------------------------------------------------------------------------------
 # Pandas interactions
 # ----------------------------------------------------------------------------------------------------------------------
@@ -309,24 +319,52 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, save_path=None, show_p
     return plot_path
 
 
-def create_bar_plot(df, bar_items):
+def create_bar_plot(df, bar_items, save_path=None, show_plot=False, team=None, date=None):
     """
-    todo
+    Creates a stacked bar graph with any number of column names for a team.
 
-    :param pandas.DataFrame df:
-    :param list bar_items:
-    :return:
+    :param pandas.DataFrame df: Data frame to use.
+    :param list bar_items: Column names within the data frame.
+    :param str save_path: The path to save the png file created.
+    :param bool show_plot: Indicates if the png should be shown during execution.
+    :return: Save path if save successful.
     """
     fig, ax = plt.subplots(figsize=(10, 8))
     margin_bottom = np.zeros(df.shape[0])
     colors = ['#17408B', '#C9082A', '#552084', '#FDBA21']
+    title = ''
     for index, item in enumerate(bar_items):
         values = df[item].to_list()
         df.plot.bar(y=item, ax=ax, stacked=True, bottom=margin_bottom, color=colors[index], rot=45, label=item)
         margin_bottom += values
+        title += '%s ' % item.title()
 
+    if team is not None:
+        if isinstance(team, str):
+            title = '%s %s' % (convert_team_name(team), title)
+
+    if date is not None:
+        if isinstance(date, datetime.datetime):
+            title = '%s %s' % (title, date.strftime('%y_%m_%d'))
+
+    ax.set_title(title)
     plt.tight_layout()
-    plt.show()
+
+    # handle output
+    plot_path = None
+    if save_path is not None:
+        if os.path.isdir(save_path):
+            if not os.path.exists(os.path.join(save_path, 'plots')):
+                os.mkdir(os.path.join(save_path, 'plots'))
+            if date is None:
+                ymd = datetime.datetime.now().strftime("%y%m%d")
+                plot_path = os.path.join(save_path, 'plots', '%s_%s' % (title.replace(' ', '_'), ymd))
+            else:
+                plot_path = os.path.join(save_path, 'plots', title.replace(' ', '_'))
+            plt.savefig(plot_path)
+    if show_plot:
+        plt.show()
+    return plot_path
 
 
 # ----------------------------------------------------------------------------------------------------------------------

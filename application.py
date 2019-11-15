@@ -100,8 +100,13 @@ class Application(object):
             # Api.create_scatter_plot_with_trend_line(x_key=x_key, y_key=y_key, df=df,
             #                                         show_plot=True, save_path=os.getcwd())
             items = ['points', 'rebounds', 'assists']
-            Api.create_bar_plot(df=Api.get_team_date_df(df, team=Team.LOS_ANGELES_LAKERS.name, date=date),
-                                bar_items=items)
+            team = Team.LOS_ANGELES_LAKERS.name
+            Api.create_bar_plot(df=Api.get_team_date_df(df, team=team, date=date),
+                                bar_items=items,
+                                show_plot=True,
+                                save_path=os.getcwd(),
+                                team=team,
+                                date=date)
 
 
 # ----------------------------------------------------------------------------------------------------------------------
