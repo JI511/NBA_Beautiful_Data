@@ -11,6 +11,7 @@ import logging
 import datetime
 
 import analytics_API as Api
+from basketball_reference_web_scraper.data import Team
 
 
 class TestAnalyticsApi(unittest.TestCase):
@@ -114,6 +115,31 @@ class TestAnalyticsApi(unittest.TestCase):
                                                             y_key='points',
                                                             df=df,
                                                             save_path=self.logs_dir)
+        self.assertTrue(os.path.exists('%s.png' % plot_path))
+
+    # ------------------------------------------------------------------------------------------------------------------
+    # create_bar_plot tests
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_create_bar_plot_nominal(self):
+        """
+        The function `create_bar_plot` shall create and save a bar plot.
+        """
+        my_csv = 'small_data_set.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path = Api.create_bar_plot(df, ['points', 'rebounds'], save_path=self.logs_dir,
+                                        team=Team.LOS_ANGELES_LAKERS.name,
+                                        date=datetime.datetime(day=22, month=10, year=2019))
+        self.assertTrue(os.path.exists('%s.png' % plot_path))
+
+    def test_create_bar_plot_one_column(self):
+        """
+        The function `create_bar_plot` shall create and save a bar plot when only one column is provided.
+        """
+        my_csv = 'small_data_set.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path = Api.create_bar_plot(df, ['points'], save_path=self.logs_dir,
+                                        team=Team.LOS_ANGELES_LAKERS.name,
+                                        date=datetime.datetime(day=22, month=10, year=2019))
         self.assertTrue(os.path.exists('%s.png' % plot_path))
 
 # ----------------------------------------------------------------------------------------------------------------------
