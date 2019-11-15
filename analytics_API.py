@@ -327,6 +327,8 @@ def create_bar_plot(df, bar_items, save_path=None, show_plot=False, team=None, d
     :param list bar_items: Column names within the data frame.
     :param str save_path: The path to save the png file created.
     :param bool show_plot: Indicates if the png should be shown during execution.
+    :param str team: Optional team name to add to plot title.
+    :param datetime.datetime date: Optional date to add to plot title.
     :return: Save path if save successful.
     """
     fig, ax = plt.subplots(figsize=(10, 8))
