@@ -8,6 +8,7 @@ import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import cm
 from collections import OrderedDict
 from basketball_reference_web_scraper import client
 from constants import Vars
@@ -264,13 +265,14 @@ def get_team_date_df(df, team, date):
     return team_df
 
 
-def create_scatter_plot_with_trend_line(x_key, y_key, df, save_path=None, show_plot=False):
+def create_scatter_plot_with_trend_line(x_key, y_key, df, outliers=5, save_path=None, show_plot=False):
     """
     Creates a scatter plot for two different series of a pandas data frame.
 
     :param str x_key: The column name in the data frame to use for the x axis.
     :param str y_key: The column name in the data frame to use for the x axis.
-    :param df: The data frame object.
+    :param pandas.DataFrame df: The data frame object.
+    :param int outliers: The number of outliers to label on the plot.
     :param str save_path: The path to save the png file created.
     :param bool show_plot: Indicates if the png should be shown during execution.
     :return: The save path of the created png, otherwise None.
@@ -278,32 +280,40 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, save_path=None, show_p
     fig, ax = plt.subplots(figsize=(10, 6))
     temp_df = df[[x_key, y_key]]
     series_size = temp_df[y_key].shape[0]
-    temp_df.plot(kind='scatter', x=x_key, y=y_key,
-                 title='%s vs %s (%s samples)' % (x_key.title().replace('_', ' '),
-                                                  y_key.title().replace('_', ' '),
-                                                  series_size),
-                 grid=True, ax=ax)
+    if series_size > outliers:
+        thresh = sorted(temp_df[y_key].to_list())[-outliers]
+    else:
+        thresh = 0
+
+    outlier_df = temp_df[temp_df[y_key] >= thresh]
+    main_df = temp_df[temp_df[y_key] < thresh]
+    title = '%s vs %s (%s samples)' % (x_key.title().replace('_', ' '),
+                                       y_key.title().replace('_', ' '),
+                                       series_size)
+    # plot main df
+    main_df.plot(kind='scatter', x=x_key, y=y_key, grid=True, ax=ax)
+    outlier_df.plot(kind='scatter', x=x_key, y=y_key, grid=True, ax=ax)
+
     ax.set_xlabel(x_key.title().replace('_', ' '))
     ax.set_ylabel(y_key.title().replace('_', ' '))
     # add point labels
-    if series_size > 10:
-        thresh = sorted(temp_df[y_key].to_list())[-10]
-    else:
-        thresh = 0
-    for k, v in temp_df.iterrows():
-        if v.values[1] >= thresh:
-            temp_split = k.split(' ')
-            name = '%s. %s' % (temp_split[0][:1], temp_split[1])
-            ax.annotate(name, v)
+
+    for k, v in outlier_df.iterrows():
+        temp_split = k.split(' ')
+        name = '%s.%s.' % (temp_split[0][:1], temp_split[1][:3])
+        ax.annotate(name, v, xytext=(5, -5), textcoords='offset points')
 
     # create trend line
     x = df[x_key]
     y = df[y_key]
     z = np.polyfit(x, y, 1)
     p = np.poly1d(z)
-    plt.plot(x, p(x), "r--")
+    plt.plot(x, p(x), "r--", label='Trend')
+
     # makes things fit on graph window
+    plt.title(title)
     plt.tight_layout()
+    plt.legend(loc='best')
 
     # handle output
     plot_path = None

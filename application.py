@@ -95,18 +95,18 @@ class Application(object):
             df.to_csv(my_csv)
 
         if plot:
-            # x_key = 'minutes_played'
-            # y_key = 'game_score'
-            # Api.create_scatter_plot_with_trend_line(x_key=x_key, y_key=y_key, df=df,
-            #                                         show_plot=True, save_path=os.getcwd())
-            items = ['points', 'rebounds', 'assists']
-            team = Team.LOS_ANGELES_LAKERS.name
-            Api.create_bar_plot(df=Api.get_team_date_df(df, team=team, date=date),
-                                bar_items=items,
-                                show_plot=True,
-                                save_path=os.getcwd(),
-                                team=team,
-                                date=date)
+            x_key = 'minutes_played'
+            y_key = 'game_score'
+            Api.create_scatter_plot_with_trend_line(x_key=x_key, y_key=y_key, df=df, outliers=5,
+                                                    show_plot=True, save_path=os.getcwd())
+            # items = ['points', 'rebounds', 'assists']
+            # team = Team.LOS_ANGELES_LAKERS.name
+            # Api.create_bar_plot(df=Api.get_team_date_df(df, team=team, date=date),
+            #                     bar_items=items,
+            #                     show_plot=True,
+            #                     save_path=os.getcwd(),
+            #                     team=team,
+            #                     date=date)
 
 
 # ----------------------------------------------------------------------------------------------------------------------
