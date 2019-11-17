@@ -160,7 +160,8 @@ def get_assist_turnover_ratio(assists, turnovers):
 
     :param assists: Number of assists.
     :param turnovers: Number of turnovers.
-    :return:
+    :return: The ratio
+    :rtype: float
     """
     try:
         ratio = float(assists) / turnovers
