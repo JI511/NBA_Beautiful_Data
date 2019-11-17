@@ -88,6 +88,27 @@ class TestAnalyticsApi(unittest.TestCase):
         self.assertEqual([date.day, date.month, date.year], [test_date.day, test_date.month, test_date.year])
 
     # ------------------------------------------------------------------------------------------------------------------
+    # get_assist_turnover_ratio tests
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_get_assist_turnover_ratio_nominal(self):
+        """
+        The function `get_assist_turnover_ratio` shall calculate the ratio given nominal data
+        """
+        assists = 10
+        turnovers = 5
+        self.assertEqual(2.0, Api.get_assist_turnover_ratio(assists, turnovers))
+        assists = 8
+        self.assertEqual(1.6, Api.get_assist_turnover_ratio(assists, turnovers))
+
+    def test_get_assist_turnover_ratio_zero_turnovers(self):
+        """
+        The function `get_assist_turnover_ratio` shall return the number of assists if the number of turnovers is 0.
+        """
+        assists = 10
+        turnovers = 0
+        self.assertEqual(10.0, Api.get_assist_turnover_ratio(assists, turnovers))
+
+    # ------------------------------------------------------------------------------------------------------------------
     # get_team_date_df tests
     # ------------------------------------------------------------------------------------------------------------------
     def test_get_team_date_nominal(self):
@@ -109,7 +130,7 @@ class TestAnalyticsApi(unittest.TestCase):
         """
         The function `create_scatter_plot_with_trend_line` shall create and save a scatter plot.
         """
-        my_csv = 'small_data_set.csv'
+        my_csv = 'player_box_scores.csv'
         df = Api.get_existing_data_frame(my_csv, logger=self.logger)
         plot_path = Api.create_scatter_plot_with_trend_line(x_key='minutes_played',
                                                             y_key='points',

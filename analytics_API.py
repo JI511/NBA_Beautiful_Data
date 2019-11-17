@@ -8,7 +8,6 @@ import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import cm
 from collections import OrderedDict
 from basketball_reference_web_scraper import client
 from constants import Vars
@@ -153,6 +152,21 @@ def get_true_shooting(points, fga, tpfga, fta):
     except ZeroDivisionError:
         ts = 0
     return round(ts, 3)
+
+
+def get_assist_turnover_ratio(assists, turnovers):
+    """
+    Calculates the ratio of assists to turnovers.
+
+    :param assists: Number of assists.
+    :param turnovers: Number of turnovers.
+    :return:
+    """
+    try:
+        ratio = float(assists) / turnovers
+    except ZeroDivisionError:
+        ratio = float(assists)
+    return ratio
 
 
 def check_supported_stats(stats):
