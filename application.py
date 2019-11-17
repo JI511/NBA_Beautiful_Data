@@ -86,6 +86,10 @@ class Application(object):
                                                     x['attempted_three_point_field_goals'],
                                                     x['attempted_free_throws']),
                     axis=1)
+                temp_df['assist_turnover_ratio'] = temp_df.apply(
+                    lambda x: Api.get_assist_turnover_ratio(x['assists'],
+                                                            x['turnovers']),
+                    axis=1)
                 temp_df.drop_duplicates(inplace=True)
                 temp_size = temp_size - temp_df.shape[0]
                 self.logger.info('Dropped %s duplicates' % temp_size)

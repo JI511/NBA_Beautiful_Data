@@ -166,7 +166,7 @@ def get_assist_turnover_ratio(assists, turnovers):
         ratio = float(assists) / turnovers
     except ZeroDivisionError:
         ratio = float(assists)
-    return ratio
+    return round(ratio, 2)
 
 
 def check_supported_stats(stats):
