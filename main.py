@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # imports
-import application
+from analytics import application
 import datetime
 import argparse
 

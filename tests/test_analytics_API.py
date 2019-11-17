@@ -10,7 +10,7 @@ import shutil
 import logging
 import datetime
 
-import analytics_API as Api
+from analytics import analytics_API as Api
 from basketball_reference_web_scraper.data import Team
 
 

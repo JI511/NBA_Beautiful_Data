@@ -10,7 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from collections import OrderedDict
 from basketball_reference_web_scraper import client
-from constants import Vars
+from .constants import Vars
 
 
 def get_player_box_score(name, logger, date_obj=None, timeout=3):

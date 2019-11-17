@@ -6,8 +6,8 @@
 import datetime
 import logging
 import os
-import analytics_API as Api
-from team_box_score import TeamBoxScore
+from . import analytics_API as Api
+from .team_box_score import TeamBoxScore
 from basketball_reference_web_scraper.data import Team
 
 

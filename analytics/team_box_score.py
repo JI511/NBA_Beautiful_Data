@@ -3,8 +3,8 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # imports
-from box_score import BoxScore
-import ez_plot
+from .box_score import BoxScore
+from . import ez_plot
 
 
 class TeamBoxScore(object):
