@@ -280,13 +280,14 @@ def get_team_date_df(df, team, date):
     return team_df
 
 
-def create_scatter_plot_with_trend_line(x_key, y_key, df, outliers=5, save_path=None, show_plot=False):
+def create_scatter_plot_with_trend_line(x_key, y_key, df, grid=True, outliers=5, save_path=None, show_plot=False):
     """
     Creates a scatter plot for two different series of a pandas data frame.
 
     :param str x_key: The column name in the data frame to use for the x axis.
     :param str y_key: The column name in the data frame to use for the x axis.
     :param pandas.DataFrame df: The data frame object.
+    :param bool grid: Indicates if a grid should be added to the plot.
     :param int outliers: The number of outliers to label on the plot.
     :param str save_path: The path to save the png file created.
     :param bool show_plot: Indicates if the png should be shown during execution.
@@ -306,8 +307,8 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, outliers=5, save_path=
                                        y_key.title().replace('_', ' '),
                                        series_size)
     # plot main df
-    main_df.plot(kind='scatter', x=x_key, y=y_key, grid=True, ax=ax)
-    outlier_df.plot(kind='scatter', x=x_key, y=y_key, grid=True, ax=ax)
+    main_df.plot(kind='scatter', x=x_key, y=y_key, grid=grid, ax=ax)
+    outlier_df.plot(kind='scatter', x=x_key, y=y_key, grid=grid, ax=ax)
 
     ax.set_xlabel(x_key.title().replace('_', ' '))
     ax.set_ylabel(y_key.title().replace('_', ' '))

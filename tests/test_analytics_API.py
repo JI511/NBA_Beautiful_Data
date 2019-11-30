@@ -138,6 +138,32 @@ class TestAnalyticsApi(unittest.TestCase):
                                                             save_path=self.logs_dir)
         self.assertTrue(os.path.exists('%s.png' % plot_path))
 
+    def test_create_scatter_plot_with_trend_line_outliers(self):
+        """
+        The function `create_scatter_plot_with_trend_line` shall create and save a scatter plot.
+        """
+        my_csv = 'player_box_scores.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path = Api.create_scatter_plot_with_trend_line(x_key='minutes_played',
+                                                            y_key='points',
+                                                            df=df,
+                                                            outliers=5,
+                                                            save_path=self.logs_dir)
+        self.assertTrue(os.path.exists('%s.png' % plot_path))
+
+    def test_create_scatter_plot_with_trend_line_no_grid(self):
+        """
+        The function `create_scatter_plot_with_trend_line` shall create and save a scatter plot without using a grid.
+        """
+        my_csv = 'player_box_scores.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path = Api.create_scatter_plot_with_trend_line(x_key='minutes_played',
+                                                            y_key='points',
+                                                            df=df,
+                                                            grid=False,
+                                                            save_path=self.logs_dir)
+        self.assertTrue(os.path.exists('%s.png' % plot_path))
+
     # ------------------------------------------------------------------------------------------------------------------
     # create_bar_plot tests
     # ------------------------------------------------------------------------------------------------------------------
