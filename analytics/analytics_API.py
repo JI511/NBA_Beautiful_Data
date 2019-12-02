@@ -290,11 +290,11 @@ def filter_df_on_team_names(df, teams):
     """
     teams = [entry.upper().replace(' ', '_') for entry in teams]
     team_df = df[df['team'].isin(teams)]
-    team_df.to_csv('temp_csv.csv')
     return team_df
 
 
-def create_scatter_plot_with_trend_line(x_key, y_key, df, grid=True, outliers=5, save_path=None, show_plot=False):
+def create_scatter_plot_with_trend_line(x_key, y_key, df, grid=True, outliers=5, teams=None,
+                                        save_path=None, show_plot=False):
     """
     Creates a scatter plot for two different series of a pandas data frame.
 
@@ -303,11 +303,15 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, grid=True, outliers=5,
     :param pandas.DataFrame df: The data frame object.
     :param bool grid: Indicates if a grid should be added to the plot.
     :param int outliers: The number of outliers to label on the plot.
+    :param list teams: The team names to filter on if wanted.
     :param str save_path: The path to save the png file created.
     :param bool show_plot: Indicates if the png should be shown during execution.
     :return: The save path of the created png, otherwise None.
     """
     fig, ax = plt.subplots(figsize=(10, 6))
+
+    if teams is not None and isinstance(teams, list):
+        df = filter_df_on_team_names(df, teams)
     temp_df = df[[x_key, y_key]]
     series_size = temp_df[y_key].shape[0]
     if series_size > outliers:

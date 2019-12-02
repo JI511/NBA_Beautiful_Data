@@ -153,9 +153,23 @@ class TestAnalyticsApi(unittest.TestCase):
                                                             save_path=self.logs_dir)
         self.assertTrue(os.path.exists('%s.png' % plot_path))
 
+    def test_create_scatter_plot_with_trend_line_filter_teams(self):
+        """
+        The function `create_scatter_plot_with_trend_line` shall create and save a scatter plot with a filtered data
+        frame based on team name.
+        """
+        my_csv = 'player_box_scores.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path = Api.create_scatter_plot_with_trend_line(x_key='minutes_played',
+                                                            y_key='points',
+                                                            df=df,
+                                                            teams=['Los Angeles Lakers'],
+                                                            save_path=self.logs_dir)
+        self.assertTrue(os.path.exists('%s.png' % plot_path))
+
     def test_create_scatter_plot_with_trend_line_outliers(self):
         """
-        The function `create_scatter_plot_with_trend_line` shall create and save a scatter plot.
+        The function `create_scatter_plot_with_trend_line` shall create and save a scatter plot with labeled outliers.
         """
         my_csv = 'player_box_scores.csv'
         df = Api.get_existing_data_frame(my_csv, logger=self.logger)
