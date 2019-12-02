@@ -124,6 +124,21 @@ class TestAnalyticsApi(unittest.TestCase):
         self.assertEqual(team_df.shape[0], 1)
 
     # ------------------------------------------------------------------------------------------------------------------
+    # filter_df_on_team_names tests
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_filter_df_on_team_names_nominal(self):
+        """
+        The function `filter_df_on_team_names` shall filter the given data frame only where the box score data is from
+        one of the given team names.
+        """
+        my_csv = 'small_data_set.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        team_df = Api.filter_df_on_team_names(df, ['Los Angeles Lakers'])
+        self.assertEqual(team_df.shape[0], 3)
+        team_df = Api.filter_df_on_team_names(df, ['Los Angeles Lakers', 'Chicago Bulls'])
+        self.assertEqual(team_df.shape[0], 4)
+
+    # ------------------------------------------------------------------------------------------------------------------
     # create_scatter_plot_with_trend_line tests
     # ------------------------------------------------------------------------------------------------------------------
     def test_create_scatter_plot_with_trend_line_nominal(self):

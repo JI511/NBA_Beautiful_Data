@@ -280,6 +280,20 @@ def get_team_date_df(df, team, date):
     return team_df
 
 
+def filter_df_on_team_names(df, teams):
+    """
+    Returns a new data frame object only containing rows where the team matches any of the provided team names.
+
+    :param pandas.DataFrame df: The data frame to search.
+    :param list teams: The teams to filter on.
+    :return: Team filtered data frame, or the original if none of the specified teams are found.
+    """
+    teams = [entry.upper().replace(' ', '_') for entry in teams]
+    team_df = df[df['team'].isin(teams)]
+    team_df.to_csv('temp_csv.csv')
+    return team_df
+
+
 def create_scatter_plot_with_trend_line(x_key, y_key, df, grid=True, outliers=5, save_path=None, show_plot=False):
     """
     Creates a scatter plot for two different series of a pandas data frame.
