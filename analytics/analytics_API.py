@@ -293,7 +293,8 @@ def filter_df_on_team_names(df, teams):
     return team_df
 
 
-def create_scatter_plot_with_trend_line(x_key, y_key, df, grid=True, outliers=5, teams=None,
+def create_scatter_plot_with_trend_line(x_key, y_key, df, grid=True, outliers=5, teams=None, min_seconds=None,
+                                        max_seconds=None,
                                         save_path=None, show_plot=False):
     """
     Creates a scatter plot for two different series of a pandas data frame.
@@ -304,15 +305,25 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, grid=True, outliers=5,
     :param bool grid: Indicates if a grid should be added to the plot.
     :param int outliers: The number of outliers to label on the plot.
     :param list teams: The team names to filter on if wanted.
+    :param int min_seconds: The minimum number of seconds played to filter on if needed.
+    :param int max_seconds: The maximum number of seconds played to filter on if needed.
     :param str save_path: The path to save the png file created.
     :param bool show_plot: Indicates if the png should be shown during execution.
     :return: The save path of the created png, otherwise None.
     """
     fig, ax = plt.subplots(figsize=(10, 6))
 
+    # filters
     if teams is not None and isinstance(teams, list):
         df = filter_df_on_team_names(df, teams)
+    if min_seconds is not None and isinstance(min_seconds, int):
+        df = df[df['seconds_played'] >= min_seconds]
+    if max_seconds is not None and isinstance(max_seconds, int):
+        df = df[df['seconds_played'] <= max_seconds]
+
     temp_df = df[[x_key, y_key]]
+
+    # find outliers
     series_size = temp_df[y_key].shape[0]
     if series_size > outliers:
         thresh = sorted(temp_df[y_key].to_list())[-outliers]
@@ -330,8 +341,8 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, grid=True, outliers=5,
 
     ax.set_xlabel(x_key.title().replace('_', ' '))
     ax.set_ylabel(y_key.title().replace('_', ' '))
-    # add point labels
 
+    # add point labels
     for k, v in outlier_df.iterrows():
         temp_split = k.split(' ')
         name = '%s.%s.' % (temp_split[0][:1], temp_split[1][:3])

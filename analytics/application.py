@@ -102,6 +102,7 @@ class Application(object):
             x_key = 'minutes_played'
             y_key = 'game_score'
             Api.create_scatter_plot_with_trend_line(x_key=x_key, y_key=y_key, df=df, outliers=5,
+                                                    min_seconds=(25*60), max_seconds=(35*60),
                                                     show_plot=True, save_path=os.getcwd())
             # items = ['points', 'rebounds', 'assists']
             # team = Team.LOS_ANGELES_LAKERS.name
