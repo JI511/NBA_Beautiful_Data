@@ -190,7 +190,7 @@ class TestAnalyticsApi(unittest.TestCase):
         plot_path = Api.create_scatter_plot_with_trend_line(x_key='minutes_played',
                                                             y_key='points',
                                                             df=df,
-                                                            outliers=5,
+                                                            num_outliers=5,
                                                             save_path=self.logs_dir)
         self.assertTrue(os.path.exists('%s.png' % plot_path))
 

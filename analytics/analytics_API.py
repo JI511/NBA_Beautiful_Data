@@ -293,7 +293,7 @@ def filter_df_on_team_names(df, teams):
     return team_df
 
 
-def create_scatter_plot_with_trend_line(x_key, y_key, df, grid=True, outliers=5, teams=None, min_seconds=None,
+def create_scatter_plot_with_trend_line(x_key, y_key, df, grid=True, num_outliers=5, teams=None, min_seconds=None,
                                         max_seconds=None,
                                         save_path=None, show_plot=False):
     """
@@ -303,7 +303,7 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, grid=True, outliers=5,
     :param str y_key: The column name in the data frame to use for the x axis.
     :param pandas.DataFrame df: The data frame object.
     :param bool grid: Indicates if a grid should be added to the plot.
-    :param int outliers: The number of outliers to label on the plot.
+    :param int num_outliers: The number of outliers to label on the plot.
     :param list teams: The team names to filter on if wanted.
     :param int min_seconds: The minimum number of seconds played to filter on if needed.
     :param int max_seconds: The maximum number of seconds played to filter on if needed.
@@ -325,8 +325,8 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, grid=True, outliers=5,
 
     # find outliers
     series_size = temp_df[y_key].shape[0]
-    if series_size > outliers:
-        thresh = sorted(temp_df[y_key].to_list())[-outliers]
+    if series_size > num_outliers:
+        thresh = sorted(temp_df[y_key].to_list())[-num_outliers]
     else:
         thresh = 0
 
@@ -371,7 +371,7 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, grid=True, outliers=5,
             plt.savefig(plot_path)
     if show_plot:
         plt.show()
-    return plot_path
+    return plot_path, outlier_df
 
 
 def create_bar_plot(df, bar_items, save_path=None, show_plot=False, team=None, date=None):
