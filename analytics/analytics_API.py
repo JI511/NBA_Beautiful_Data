@@ -358,7 +358,7 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, grid=True, num_outlier
     # makes things fit on graph window
     plt.title(title)
     plt.tight_layout()
-    plt.legend(loc='best')
+    plt.legend(loc='lower right')
 
     # handle output
     plot_path = None
