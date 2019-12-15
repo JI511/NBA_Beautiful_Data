@@ -309,12 +309,11 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, **kwargs):
         int max_seconds: The maximum number of seconds played to filter on if needed.
         str save_path: The path to save the png file created.
         bool show_plot: Indicates if the png should be shown during execution.
+        bool trend_line: Indicates if a trend line should be shown.
 
     :return: The save path of the created png and the outlier DataFrame.
     :rtype: tuple
     """
-    fig, ax = plt.subplots(figsize=(10, 6))
-
     teams = kwargs.get('teams', None)
     save_path = kwargs.get('save_path', None)
     show_plot = kwargs.get('show_plot', False)
@@ -322,6 +321,7 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, **kwargs):
     max_seconds = kwargs.get('max_seconds', None)
     num_outliers = kwargs.get('num_outliers', 5)
     grid = kwargs.get('grid', True)
+    trend_line = kwargs.get('trend_line', True)
 
     # filters
     if teams is not None and isinstance(teams, list):
@@ -352,6 +352,7 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, **kwargs):
                                        y_key.title().replace('_', ' '),
                                        series_size)
     # plot main df
+    fig, ax = plt.subplots(figsize=(10, 6))
     main_df.plot(kind='scatter', x=x_key, y=y_key, grid=grid, ax=ax)
     outlier_df.plot(kind='scatter', x=x_key, y=y_key, grid=grid, ax=ax)
 
@@ -365,11 +366,12 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, **kwargs):
         ax.annotate(name, v, xytext=(5, -5), textcoords='offset points')
 
     # create trend line
-    x = df[x_key]
-    y = df[y_key]
-    z = np.polyfit(x, y, 1)
-    p = np.poly1d(z)
-    plt.plot(x, p(x), "r--", label='Trend')
+    if trend_line:
+        x = df[x_key]
+        y = df[y_key]
+        z = np.polyfit(x, y, 1)
+        p = np.poly1d(z)
+        plt.plot(x, p(x), "r--", label='Trend')
 
     # makes things fit on graph window
     plt.title(title)

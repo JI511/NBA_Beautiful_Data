@@ -153,6 +153,19 @@ class TestAnalyticsApi(unittest.TestCase):
                                                                save_path=self.logs_dir)
         self.assertTrue(os.path.exists('%s.png' % plot_path))
 
+    def test_create_scatter_plot_with_trend_line_no_trend_line(self):
+        """
+        The function `create_scatter_plot_with_trend_line` shall create and save a scatter plot.
+        """
+        my_csv = 'player_box_scores.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path, _ = Api.create_scatter_plot_with_trend_line(x_key='minutes_played',
+                                                               y_key='points',
+                                                               df=df,
+                                                               trend_line=False,
+                                                               save_path=self.logs_dir)
+        self.assertTrue(os.path.exists('%s.png' % plot_path))
+
     def test_create_scatter_plot_with_trend_line_seconds_filter(self):
         """
         The function `create_scatter_plot_with_trend_line` shall create and save a scatter plot when provided a
