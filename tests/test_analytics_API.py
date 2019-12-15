@@ -155,7 +155,8 @@ class TestAnalyticsApi(unittest.TestCase):
 
     def test_create_scatter_plot_with_trend_line_seconds_filter(self):
         """
-        The function `create_scatter_plot_with_trend_line` shall create and save a scatter plot.
+        The function `create_scatter_plot_with_trend_line` shall create and save a scatter plot when provided a
+        minimum and maximum seconds value.
         """
         my_csv = 'player_box_scores.csv'
         df = Api.get_existing_data_frame(my_csv, logger=self.logger)
@@ -164,6 +165,21 @@ class TestAnalyticsApi(unittest.TestCase):
                                                                df=df,
                                                                min_seconds=300,
                                                                max_seconds=600,
+                                                               save_path=self.logs_dir)
+        self.assertTrue(os.path.exists('%s.png' % plot_path))
+
+    def test_create_scatter_plot_with_trend_line_minutes_filter(self):
+        """
+        The function `create_scatter_plot_with_trend_line` shall create and save a scatter plot when provided with
+        a minimum and maximum minutes value.
+        """
+        my_csv = 'player_box_scores.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path, _ = Api.create_scatter_plot_with_trend_line(x_key='minutes_played',
+                                                               y_key='points',
+                                                               df=df,
+                                                               min_seconds=10,
+                                                               max_seconds=30,
                                                                save_path=self.logs_dir)
         self.assertTrue(os.path.exists('%s.png' % plot_path))
 

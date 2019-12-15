@@ -327,9 +327,15 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, **kwargs):
     if teams is not None and isinstance(teams, list):
         df = filter_df_on_team_names(df, teams)
     if min_seconds is not None and isinstance(min_seconds, int):
-        df = df[df['seconds_played'] >= min_seconds]
+        if min_seconds >= 60:
+            df = df[df['seconds_played'] >= min_seconds]
+        else:
+            df = df[df['minutes_played'] >= min_seconds]
     if max_seconds is not None and isinstance(max_seconds, int):
-        df = df[df['seconds_played'] <= max_seconds]
+        if max_seconds >= 60:
+            df = df[df['seconds_played'] <= max_seconds]
+        else:
+            df = df[df['minutes_played'] <= max_seconds]
 
     temp_df = df[[x_key, y_key]]
 
