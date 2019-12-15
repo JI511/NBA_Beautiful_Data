@@ -293,25 +293,35 @@ def filter_df_on_team_names(df, teams):
     return team_df
 
 
-def create_scatter_plot_with_trend_line(x_key, y_key, df, grid=True, num_outliers=5, teams=None, min_seconds=None,
-                                        max_seconds=None,
-                                        save_path=None, show_plot=False):
+def create_scatter_plot_with_trend_line(x_key, y_key, df, **kwargs):
     """
     Creates a scatter plot for two different series of a pandas data frame.
 
     :param str x_key: The column name in the data frame to use for the x axis.
     :param str y_key: The column name in the data frame to use for the x axis.
     :param pandas.DataFrame df: The data frame object.
-    :param bool grid: Indicates if a grid should be added to the plot.
-    :param int num_outliers: The number of outliers to label on the plot.
-    :param list teams: The team names to filter on if wanted.
-    :param int min_seconds: The minimum number of seconds played to filter on if needed.
-    :param int max_seconds: The maximum number of seconds played to filter on if needed.
-    :param str save_path: The path to save the png file created.
-    :param bool show_plot: Indicates if the png should be shown during execution.
-    :return: The save path of the created png, otherwise None.
+
+    Supported kwargs:
+        bool grid: Indicates if a grid should be added to the plot.
+        int num_outliers: The number of outliers to label on the plot.
+        list teams: The team names to filter on if wanted.
+        int min_seconds: The minimum number of seconds played to filter on if needed.
+        int max_seconds: The maximum number of seconds played to filter on if needed.
+        str save_path: The path to save the png file created.
+        bool show_plot: Indicates if the png should be shown during execution.
+
+    :return: The save path of the created png and the outlier DataFrame.
+    :rtype: tuple
     """
     fig, ax = plt.subplots(figsize=(10, 6))
+
+    teams = kwargs.get('teams', None)
+    save_path = kwargs.get('save_path', None)
+    show_plot = kwargs.get('show_plot', False)
+    min_seconds = kwargs.get('min_seconds', None)
+    max_seconds = kwargs.get('max_seconds', None)
+    num_outliers = kwargs.get('num_outliers', 5)
+    grid = kwargs.get('grid', True)
 
     # filters
     if teams is not None and isinstance(teams, list):

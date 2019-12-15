@@ -147,10 +147,10 @@ class TestAnalyticsApi(unittest.TestCase):
         """
         my_csv = 'player_box_scores.csv'
         df = Api.get_existing_data_frame(my_csv, logger=self.logger)
-        plot_path = Api.create_scatter_plot_with_trend_line(x_key='minutes_played',
-                                                            y_key='points',
-                                                            df=df,
-                                                            save_path=self.logs_dir)
+        plot_path, _ = Api.create_scatter_plot_with_trend_line(x_key='minutes_played',
+                                                               y_key='points',
+                                                               df=df,
+                                                               save_path=self.logs_dir)
         self.assertTrue(os.path.exists('%s.png' % plot_path))
 
     def test_create_scatter_plot_with_trend_line_seconds_filter(self):
@@ -159,12 +159,12 @@ class TestAnalyticsApi(unittest.TestCase):
         """
         my_csv = 'player_box_scores.csv'
         df = Api.get_existing_data_frame(my_csv, logger=self.logger)
-        plot_path = Api.create_scatter_plot_with_trend_line(x_key='minutes_played',
-                                                            y_key='points',
-                                                            df=df,
-                                                            min_seconds=300,
-                                                            max_seconds=600,
-                                                            save_path=self.logs_dir)
+        plot_path, _ = Api.create_scatter_plot_with_trend_line(x_key='minutes_played',
+                                                               y_key='points',
+                                                               df=df,
+                                                               min_seconds=300,
+                                                               max_seconds=600,
+                                                               save_path=self.logs_dir)
         self.assertTrue(os.path.exists('%s.png' % plot_path))
 
     def test_create_scatter_plot_with_trend_line_filter_teams(self):
@@ -174,11 +174,11 @@ class TestAnalyticsApi(unittest.TestCase):
         """
         my_csv = 'player_box_scores.csv'
         df = Api.get_existing_data_frame(my_csv, logger=self.logger)
-        plot_path = Api.create_scatter_plot_with_trend_line(x_key='minutes_played',
-                                                            y_key='points',
-                                                            df=df,
-                                                            teams=['Los Angeles Lakers'],
-                                                            save_path=self.logs_dir)
+        plot_path, _ = Api.create_scatter_plot_with_trend_line(x_key='minutes_played',
+                                                               y_key='points',
+                                                               df=df,
+                                                               teams=['Los Angeles Lakers'],
+                                                               save_path=self.logs_dir)
         self.assertTrue(os.path.exists('%s.png' % plot_path))
 
     def test_create_scatter_plot_with_trend_line_outliers(self):
@@ -187,11 +187,11 @@ class TestAnalyticsApi(unittest.TestCase):
         """
         my_csv = 'player_box_scores.csv'
         df = Api.get_existing_data_frame(my_csv, logger=self.logger)
-        plot_path = Api.create_scatter_plot_with_trend_line(x_key='minutes_played',
-                                                            y_key='points',
-                                                            df=df,
-                                                            num_outliers=5,
-                                                            save_path=self.logs_dir)
+        plot_path, _ = Api.create_scatter_plot_with_trend_line(x_key='minutes_played',
+                                                               y_key='points',
+                                                               df=df,
+                                                               num_outliers=5,
+                                                               save_path=self.logs_dir)
         self.assertTrue(os.path.exists('%s.png' % plot_path))
 
     def test_create_scatter_plot_with_trend_line_no_grid(self):
@@ -200,11 +200,11 @@ class TestAnalyticsApi(unittest.TestCase):
         """
         my_csv = 'player_box_scores.csv'
         df = Api.get_existing_data_frame(my_csv, logger=self.logger)
-        plot_path = Api.create_scatter_plot_with_trend_line(x_key='minutes_played',
-                                                            y_key='points',
-                                                            df=df,
-                                                            grid=False,
-                                                            save_path=self.logs_dir)
+        plot_path, _ = Api.create_scatter_plot_with_trend_line(x_key='minutes_played',
+                                                               y_key='points',
+                                                               df=df,
+                                                               grid=False,
+                                                               save_path=self.logs_dir)
         self.assertTrue(os.path.exists('%s.png' % plot_path))
 
     # ------------------------------------------------------------------------------------------------------------------
