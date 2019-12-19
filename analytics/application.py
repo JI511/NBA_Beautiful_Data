@@ -55,48 +55,20 @@ class Application(object):
         # box_score = BoxScore(temp_bs, fd)
         # print(box_score.to_string())
 
-        team_box_scores = []
         my_csv = 'player_box_scores.csv'
         # my_csv = 'small_data_set.csv'
         df = Api.get_existing_data_frame(my_csv, logger=self.logger)
-
         if gather_new:
-            daily_box_scores, found_date = Api.get_daily_box_scores(date_obj=date)
-            for team in daily_box_scores.keys():
-                team_box_scores.append(TeamBoxScore(box_scores=daily_box_scores[team],
-                                                    team_box_score=[],
-                                                    team_name=team,
-                                                    date=found_date))
-
-            new_df = Api.create_data_frame_from_team_box_scores(team_box_scores=team_box_scores,
-                                                                logger=self.logger)
-            if df is None:
-                print('There was not an existing data frame.')
-                df = new_df
+            if gather_new == 'update_to_current':
+                current_date = date
+                last_update_date = Api.get_most_recent_update_date(df)  # type: datetime.datetime
+                while current_date.strftime('%y_%m_%d') != last_update_date.strftime('%y_%m_%d'):
+                    df = self.gather_new_on_date(current_date, my_csv)
+                    current_date -= datetime.timedelta(days=1)
             else:
-                print('Appending new data frame of shape: %s' % str(new_df.shape))
-                self.logger.info('Appending new data frame of shape: %s' % str(new_df.shape))
-                temp_df = df.append(new_df, sort=False)
-                temp_size = temp_df.shape[0]
-                # add new columns with ops from existing data
-                temp_df['minutes_played'] = temp_df['seconds_played'].apply(Api.convert_to_minutes)
-                temp_df['true_shooting'] = temp_df.apply(
-                    lambda x: Api.get_true_shooting(x['points'],
-                                                    x['attempted_field_goals'],
-                                                    x['attempted_three_point_field_goals'],
-                                                    x['attempted_free_throws']),
-                    axis=1)
-                temp_df['assist_turnover_ratio'] = temp_df.apply(
-                    lambda x: Api.get_assist_turnover_ratio(x['assists'],
-                                                            x['turnovers']),
-                    axis=1)
-                temp_df.drop_duplicates(inplace=True)
-                temp_size = temp_size - temp_df.shape[0]
-                self.logger.info('Dropped %s duplicates' % temp_size)
-                print('Dropped %s duplicates' % temp_size)
-                df = temp_df
-                print(df.shape)
-            df.to_csv(my_csv)
+                df = self.gather_new_on_date(date, my_csv)
+        else:
+            df = Api.get_existing_data_frame(my_csv, logger=self.logger)
 
         if plot:
             x_key = 'minutes_played'
@@ -113,6 +85,53 @@ class Application(object):
             #                     team=team,
             #                     date=date)
 
+    def gather_new_on_date(self, date, csv):
+        """
+        Gathers new player box score data from a specific date and updates the given csv if provided.
+
+        :param datetime.datetime date: The date to search on
+        :param str csv: The path to the csv
+        :return: The pandas.DataFrame object
+        """
+        team_box_scores = []
+        df = Api.get_existing_data_frame(csv, logger=self.logger)
+        daily_box_scores, found_date = Api.get_daily_box_scores(date_obj=date)
+        for team in daily_box_scores.keys():
+            team_box_scores.append(TeamBoxScore(box_scores=daily_box_scores[team],
+                                                team_box_score=[],
+                                                team_name=team,
+                                                date=found_date))
+
+        new_df = Api.create_data_frame_from_team_box_scores(team_box_scores=team_box_scores,
+                                                            logger=self.logger)
+        if df is None:
+            print('There was not an existing data frame.')
+            df = new_df
+        else:
+            print('Appending new data frame of shape: %s' % str(new_df.shape))
+            self.logger.info('Appending new data frame of shape: %s' % str(new_df.shape))
+            temp_df = df.append(new_df, sort=False)
+            temp_size = temp_df.shape[0]
+            # add new columns with ops from existing data
+            temp_df['minutes_played'] = temp_df['seconds_played'].apply(Api.convert_to_minutes)
+            temp_df['true_shooting'] = temp_df.apply(
+                lambda x: Api.get_true_shooting(x['points'],
+                                                x['attempted_field_goals'],
+                                                x['attempted_three_point_field_goals'],
+                                                x['attempted_free_throws']),
+                axis=1)
+            temp_df['assist_turnover_ratio'] = temp_df.apply(
+                lambda x: Api.get_assist_turnover_ratio(x['assists'],
+                                                        x['turnovers']),
+                axis=1)
+            temp_df.drop_duplicates(inplace=True)
+            temp_size = temp_size - temp_df.shape[0]
+            self.logger.info('Dropped %s duplicates' % temp_size)
+            print('Dropped %s duplicates' % temp_size)
+            df = temp_df
+            print(df.shape)
+        df.to_csv(csv)
+        return df
 
 # ----------------------------------------------------------------------------------------------------------------------
 # End

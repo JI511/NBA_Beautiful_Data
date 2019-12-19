@@ -293,6 +293,18 @@ def filter_df_on_team_names(df, teams):
     return team_df
 
 
+def get_most_recent_update_date(df, date_col='date'):
+    """
+    Gets the most recent date from the pandas.DataFrame provided.
+
+    :param pandas.DataFrame df: The pandas.DataFrame object
+    :param str date_col: The column to reference in the DataFrame object
+    :return: The date found
+    """
+    temp_series = pd.to_datetime(df[date_col], format='%y_%m_%d')
+    print(temp_series.max())
+
+
 def create_scatter_plot_with_trend_line(x_key, y_key, df, **kwargs):
     """
     Creates a scatter plot for two different series of a pandas data frame.
