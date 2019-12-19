@@ -372,11 +372,12 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, **kwargs):
         z = np.polyfit(x, y, 1)
         p = np.poly1d(z)
         plt.plot(x, p(x), "r--", label='Trend')
+        plt.legend(loc='lower right')
 
     # makes things fit on graph window
     plt.title(title)
     plt.tight_layout()
-    plt.legend(loc='lower right')
+
 
     # handle output
     plot_path = None
