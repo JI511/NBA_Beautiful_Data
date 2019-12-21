@@ -6,7 +6,6 @@
 import datetime
 import logging
 import os
-import sys
 from . import analytics_API as Api
 
 

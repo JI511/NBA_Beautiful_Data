@@ -9,12 +9,12 @@ import os
 import shutil
 import logging
 import datetime
-
+import sys
+sys.path.append(os.getcwd())
 # third party imports
 from basketball_reference_web_scraper.data import Team
-
 # relative imports
-from analytics import analytics_API as Api
+from src import analytics_API as Api
 
 
 class TestAnalyticsApi(unittest.TestCase):
