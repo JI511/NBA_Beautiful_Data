@@ -7,8 +7,6 @@ import datetime
 import logging
 import os
 from . import analytics_API as Api
-from .team_box_score import TeamBoxScore
-from basketball_reference_web_scraper.data import Team
 
 
 class Application(object):
@@ -46,57 +44,24 @@ class Application(object):
         """
         if should_log:
             logging.basicConfig(filename='log.ini', level=logging.INFO)
+            # logging.basicConfig(stream=sys.stdout, level=logging.INFO)
         if not date:
             date = datetime.datetime.now()
-        self.logger.info("Executing datetime: %s" % date)
-        print(date)
+        self.logger.info("---------- Executing datetime: %s ----------" % date)
 
-        # temp_bs, fd = Api.get_player_box_score(name=self.player, date_obj=date)
-        # box_score = BoxScore(temp_bs, fd)
-        # print(box_score.to_string())
-
-        team_box_scores = []
         my_csv = 'player_box_scores.csv'
         # my_csv = 'small_data_set.csv'
-        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
-
+        df = Api.gather_new_on_date(date, my_csv, self.logger)
         if gather_new:
-            daily_box_scores, found_date = Api.get_daily_box_scores(date_obj=date)
-            for team in daily_box_scores.keys():
-                team_box_scores.append(TeamBoxScore(box_scores=daily_box_scores[team],
-                                                    team_box_score=[],
-                                                    team_name=team,
-                                                    date=found_date))
-
-            new_df = Api.create_data_frame_from_team_box_scores(team_box_scores=team_box_scores,
-                                                                logger=self.logger)
-            if df is None:
-                print('There was not an existing data frame.')
-                df = new_df
-            else:
-                print('Appending new data frame of shape: %s' % str(new_df.shape))
-                self.logger.info('Appending new data frame of shape: %s' % str(new_df.shape))
-                temp_df = df.append(new_df, sort=False)
-                temp_size = temp_df.shape[0]
-                # add new columns with ops from existing data
-                temp_df['minutes_played'] = temp_df['seconds_played'].apply(Api.convert_to_minutes)
-                temp_df['true_shooting'] = temp_df.apply(
-                    lambda x: Api.get_true_shooting(x['points'],
-                                                    x['attempted_field_goals'],
-                                                    x['attempted_three_point_field_goals'],
-                                                    x['attempted_free_throws']),
-                    axis=1)
-                temp_df['assist_turnover_ratio'] = temp_df.apply(
-                    lambda x: Api.get_assist_turnover_ratio(x['assists'],
-                                                            x['turnovers']),
-                    axis=1)
-                temp_df.drop_duplicates(inplace=True)
-                temp_size = temp_size - temp_df.shape[0]
-                self.logger.info('Dropped %s duplicates' % temp_size)
-                print('Dropped %s duplicates' % temp_size)
-                df = temp_df
-                print(df.shape)
-            df.to_csv(my_csv)
+            if gather_new == 'update_to_current':
+                current_date = date
+                last_update_date = Api.get_most_recent_update_date(df)
+                self.logger.info('Last fetched date: %s', last_update_date)
+                while current_date.strftime('%y_%m_%d') != last_update_date.strftime('%y_%m_%d'):
+                    self.logger.info('-- Attempting to add date: %s', current_date)
+                    df = Api.gather_new_on_date(current_date, my_csv, self.logger)
+                    current_date -= datetime.timedelta(days=1)
+                    # todo, get older csv to test with, and write unit tests?
 
         if plot:
             x_key = 'minutes_played'
@@ -112,7 +77,6 @@ class Application(object):
             #                     save_path=os.getcwd(),
             #                     team=team,
             #                     date=date)
-
 
 # ----------------------------------------------------------------------------------------------------------------------
 # End
