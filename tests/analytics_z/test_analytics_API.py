@@ -10,8 +10,11 @@ import shutil
 import logging
 import datetime
 
-from analytics import analytics_API as Api
+# third party imports
 from basketball_reference_web_scraper.data import Team
+
+# relative imports
+from analytics import analytics_API as Api
 
 
 class TestAnalyticsApi(unittest.TestCase):

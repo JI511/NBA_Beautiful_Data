@@ -9,7 +9,11 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from collections import OrderedDict
+
+# third party imports
 from basketball_reference_web_scraper import client
+
+# relative imports
 from .constants import Vars
 from .team_box_score import TeamBoxScore
 
