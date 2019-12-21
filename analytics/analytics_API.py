@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from collections import OrderedDict
 from basketball_reference_web_scraper import client
 from .constants import Vars
+from .team_box_score import TeamBoxScore
 
 
 def get_player_box_score(name, logger, date_obj=None, timeout=3):
@@ -217,6 +218,54 @@ def get_existing_data_frame(csv_path, logger):
     return df
 
 
+def gather_new_on_date(date, csv, logger):
+    """
+    Gathers new player box score data from a specific date and updates the given csv if provided.
+
+    :param datetime.datetime date: The date to search on
+    :param str csv: The path to the csv
+    :param logger: Logging object
+    :return: The pandas.DataFrame object
+    """
+    team_box_scores = []
+    df = get_existing_data_frame(csv, logger=logger)
+    daily_box_scores, found_date = get_daily_box_scores(date_obj=date)
+    for team in daily_box_scores.keys():
+        team_box_scores.append(TeamBoxScore(box_scores=daily_box_scores[team],
+                                            team_box_score=[],
+                                            team_name=team,
+                                            date=found_date))
+
+    new_df = create_data_frame_from_team_box_scores(team_box_scores=team_box_scores, logger=logger)
+    if df is None:
+        logger.info('There was not an existing data frame.')
+        df = new_df
+    else:
+        logger.info('Appending new data frame of shape: %s' % (new_df.shape,))
+        temp_df = df.append(new_df, sort=False)
+        temp_size = temp_df.shape[0]
+        # add new columns with ops from existing data
+        temp_df['minutes_played'] = temp_df['seconds_played'].apply(convert_to_minutes)
+        temp_df['true_shooting'] = temp_df.apply(
+            lambda x: get_true_shooting(x['points'],
+                                        x['attempted_field_goals'],
+                                        x['attempted_three_point_field_goals'],
+                                        x['attempted_free_throws']),
+            axis=1)
+        temp_df['assist_turnover_ratio'] = temp_df.apply(
+            lambda x: get_assist_turnover_ratio(x['assists'],
+                                                x['turnovers']),
+            axis=1)
+        temp_df.drop_duplicates(inplace=True)
+        temp_size = temp_size - temp_df.shape[0]
+        logger.info('Dropped %s duplicates' % temp_size)
+        logger.info('Dropped %s duplicates' % temp_size)
+        df = temp_df
+        logger.info('Shape of DataFrame object: %s' % (df.shape,))
+    df.to_csv(csv)
+    return df
+
+
 def create_data_frame_from_team_box_scores(team_box_scores, logger):
     """
     Creates a pandas data frame object from a list of team box score objects.
@@ -226,7 +275,7 @@ def create_data_frame_from_team_box_scores(team_box_scores, logger):
     :return: Pandas data frame
     :rtype: pd.DataFrame
     """
-    logger.info("Appending new data frame from %s teams" % len(team_box_scores))
+    logger.info(" Appending new data frame from %s teams" % len(team_box_scores))
     data = {}
     index = []
     for stat in Vars.supported_stats:
@@ -259,7 +308,7 @@ def create_data_frame_from_team_box_scores(team_box_scores, logger):
     if data['team']:
         teams = list(set(data['team']))
         for team in teams:
-            logger.info('\t%s' % team)
+            logger.info('    %s' % team)
     df = pd.DataFrame(data, index=index)
     return df
 
@@ -300,9 +349,11 @@ def get_most_recent_update_date(df, date_col='date'):
     :param pandas.DataFrame df: The pandas.DataFrame object
     :param str date_col: The column to reference in the DataFrame object
     :return: The date found
+    :rtype: datetime.datetime
     """
     temp_series = pd.to_datetime(df[date_col], format='%y_%m_%d')
-    print(temp_series.max())
+    temp_date = str(temp_series.max()).split()[0].split('-')
+    return datetime.datetime(year=int(temp_date[0]), month=int(temp_date[1]), day=int(temp_date[2]))
 
 
 def create_scatter_plot_with_trend_line(x_key, y_key, df, **kwargs):
@@ -389,7 +440,6 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, **kwargs):
     # makes things fit on graph window
     plt.title(title)
     plt.tight_layout()
-
 
     # handle output
     plot_path = None
