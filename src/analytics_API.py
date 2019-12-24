@@ -378,7 +378,7 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, **kwargs):
         bool show_plot: Indicates if the png should be shown during execution.
         bool trend_line: Indicates if a trend line should be shown.
 
-    :return: The save path of the created png and the outlier DataFrame.
+    :return: The save path of the created png, the outlier DataFrame, the filtered DataFrame.
     :rtype: tuple
     """
     teams = kwargs.get('teams', None)
@@ -463,7 +463,7 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, **kwargs):
             plot_path = save_path
     if show_plot:
         plt.show()
-    return plot_path, outlier_df
+    return plot_path, outlier_df, temp_df
 
 
 def create_bar_plot(df, bar_items, save_path=None, show_plot=False, team=None, date=None):
