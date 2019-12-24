@@ -51,7 +51,7 @@ class Application(object):
 
         my_csv = 'player_box_scores.csv'
         # my_csv = 'small_data_set.csv'
-        df = Api.gather_new_on_date(date, my_csv, self.logger)
+        df = Api.get_existing_data_frame(my_csv, self.logger)
         if gather_new:
             if gather_new == 'update_to_current':
                 current_date = date
