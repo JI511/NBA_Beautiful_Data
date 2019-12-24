@@ -463,7 +463,7 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, **kwargs):
             plot_path = save_path
     if show_plot:
         plt.show()
-    return plot_path, outlier_df, temp_df
+    return plot_path, outlier_df, df
 
 
 def create_bar_plot(df, bar_items, save_path=None, show_plot=False, team=None, date=None):
