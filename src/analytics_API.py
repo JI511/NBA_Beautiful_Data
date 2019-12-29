@@ -360,6 +360,24 @@ def get_most_recent_update_date(df, date_col='date'):
     return datetime.datetime(year=int(temp_date[0]), month=int(temp_date[1]), day=int(temp_date[2]))
 
 
+def get_team_result_on_date(team, date, df):
+    """
+    Calculates the team scores on a particular date.
+
+    :param str team: Team to search for
+    :param datetime.datetime date: The date to search on
+    :param pandas.DataFrame df: The data set to search in
+    :return: The score as a string, ex: 97-88. The desired team's score will always be first.
+    """
+    converted_team = team.replace(' ', '_').upper()
+    converted_date = date.strftime('%y_%m_%d')
+    team_df = df[(df['team'] == converted_team) & (df['date'] == converted_date) & (df['points'] > 0)]
+    opp_team = team_df['opponent'].values[0]
+    opp_df = df[(df['team'] == opp_team) & (df['date'] == converted_date) & (df['points'] > 0)]
+    res = '%s-%s' % (int(np.sum(team_df['points'])), int(np.sum(opp_df['points'])))
+    return res
+
+
 def create_scatter_plot_with_trend_line(x_key, y_key, df, **kwargs):
     """
     Creates a scatter plot for two different series of a pandas data frame.

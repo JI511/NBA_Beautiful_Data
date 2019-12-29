@@ -142,6 +142,26 @@ class TestAnalyticsApi(unittest.TestCase):
         self.assertEqual(team_df.shape[0], 4)
 
     # ------------------------------------------------------------------------------------------------------------------
+    # get_most_recent_update_data tests
+    # ------------------------------------------------------------------------------------------------------------------
+    # todo
+
+    # ------------------------------------------------------------------------------------------------------------------
+    # get_team_result_on_date tests
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_get_team_result_on_date_nominal(self):
+        """
+
+        """
+        my_csv = 'player_box_scores.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        date = datetime.datetime(day=25, month=10, year=2019)
+        res = Api.get_team_result_on_date('Los Angeles Lakers', date, df)
+        self.assertEqual('95-86', res)
+
+    # todo add test for team or date not found?
+
+    # ------------------------------------------------------------------------------------------------------------------
     # create_scatter_plot_with_trend_line tests
     # ------------------------------------------------------------------------------------------------------------------
     def test_create_scatter_plot_with_trend_line_nominal(self):
