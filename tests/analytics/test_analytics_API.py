@@ -176,6 +176,18 @@ class TestAnalyticsApi(unittest.TestCase):
                                                                   save_path=self.logs_dir)
         self.assertTrue(os.path.exists('%s.png' % plot_path))
 
+    def test_create_scatter_plot_with_trend_line_svg_save(self):
+        """
+        The function `create_scatter_plot_with_trend_line` shall create and save a scatter plot.
+        """
+        my_csv = 'small_data_set.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path, _, _ = Api.create_scatter_plot_with_trend_line(x_key='minutes_played',
+                                                                  y_key='points',
+                                                                  df=df,
+                                                                  save_path='svg_buffer')
+        self.assertEqual(41174, len(plot_path))
+
     def test_create_scatter_plot_with_trend_line_data_frames(self):
         """
         The function `create_scatter_plot_with_trend_line` shall create and save a scatter plot, return

@@ -5,6 +5,7 @@
 # imports
 import datetime
 import os
+import io
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -475,12 +476,19 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, **kwargs):
             plot_path = os.path.join(save_path, 'plots', '%s_VS_%s_%s' % (x_key, y_key, ymd))
             plt.savefig(plot_path)
         else:
-            # save at the path given
-            plt.savefig(save_path)
+            if save_path == 'svg_buffer':
+                fig_file = io.StringIO()
+                plt.savefig(fig_file, format='svg', bbox_inches='tight')
+                fig_data_svg = '<svg' + fig_file.getvalue().split('<svg')[1]
+                fig_file.close()
+                plot_path = fig_data_svg
+            else:
+                # save at the path given
+                plt.savefig(save_path)
+                plot_path = save_path
             plt.clf()
             plt.cla()
             plt.close('all')
-            plot_path = save_path
     if show_plot:
         plt.show()
     return plot_path, outlier_df_full, df
