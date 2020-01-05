@@ -65,14 +65,14 @@ class Application(object):
 
         if plot:
             x_key = 'minutes_played'
-            y_key = 'game_score'
-            Api.create_scatter_plot_with_trend_line(x_key=x_key, y_key=y_key, df=df, num_outliers=5,
-                                                    min_seconds=0, max_seconds=60*35, teams=['Los Angeles Lakers'],
-                                                    show_plot=True, save_path=os.getcwd())
-            x_key = 'date'
-            # Api.create_date_plot(x_key=x_key, y_key=y_key, df=df, num_outliers=5,
+            y_key = 'points'
+            # Api.create_scatter_plot_with_trend_line(x_key=x_key, y_key=y_key, df=df, num_outliers=5,
             #                                         min_seconds=0, max_seconds=60*35, teams=['Los Angeles Lakers'],
-            #                                         show_plot=True, save_path=os.getcwd())
+            #                                         show_plot=True)
+            x_key = 'date'
+            Api.create_date_plot(x_key=x_key, y_key=y_key, df=df, num_outliers=5,
+                                                    min_seconds=0, max_seconds=6000, teams=['Los Angeles Lakers'],
+                                                    show_plot=True, save_path=os.getcwd())
             # items = ['points', 'rebounds', 'assists']
             # team = Team.LOS_ANGELES_LAKERS.name
             # Api.create_bar_plot(df=Api.get_team_date_df(df, team=team, date=date),

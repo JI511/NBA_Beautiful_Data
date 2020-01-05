@@ -507,6 +507,7 @@ def create_date_plot(x_key, y_key, df, **kwargs):
     # filters
     if teams is not None and isinstance(teams, list):
         df = filter_df_on_team_names(df, teams)
+        df = df[df.index.isin(['Anthony Davis'])]
     if min_seconds is not None and isinstance(min_seconds, int):
         if min_seconds >= 60:
             df = df[df['seconds_played'] >= min_seconds]
@@ -518,12 +519,10 @@ def create_date_plot(x_key, y_key, df, **kwargs):
         else:
             df = df[df['minutes_played'] <= max_seconds]
     graph_kind = 'scatter'
-    print(date)
     if date:
         df['datetime'] = pd.to_datetime(df['date'], format='%y_%m_%d')
         x_key = 'datetime'
         graph_kind = 'line'
-    print(graph_kind)
     temp_df = df[[x_key, y_key]]
     series_size = temp_df[y_key].shape[0]
     title = '%s vs %s (%s samples)' % (x_key.title().replace('_', ' '),
@@ -531,7 +530,7 @@ def create_date_plot(x_key, y_key, df, **kwargs):
                                        series_size)
 
     fig, ax = plt.subplots(figsize=(10, 6))
-    temp_df.plot(kind=graph_kind, x=x_key, y=y_key, grid=grid, ax=ax)
+    temp_df.plot(kind=graph_kind, x=x_key, y=y_key, style='.', ms=10, grid=grid, ax=ax)
     ax.set_xlabel(x_key.title().replace('_', ' '))
     ax.set_ylabel(y_key.title().replace('_', ' '))
     plt.title(title)
