@@ -422,7 +422,6 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, **kwargs):
             df = df[df['seconds_played'] <= max_seconds]
         else:
             df = df[df['minutes_played'] <= max_seconds]
-
     temp_df = df[[x_key, y_key]]
 
     # find outliers
@@ -492,6 +491,78 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, **kwargs):
     if show_plot:
         plt.show()
     return plot_path, outlier_df_full, df
+
+
+def create_date_plot(x_key, y_key, df, **kwargs):
+    teams = kwargs.get('teams', None)
+    save_path = kwargs.get('save_path', None)
+    show_plot = kwargs.get('show_plot', False)
+    min_seconds = kwargs.get('min_seconds', None)
+    max_seconds = kwargs.get('max_seconds', None)
+    num_outliers = kwargs.get('num_outliers', 5)
+    grid = kwargs.get('grid', True)
+    trend_line = kwargs.get('trend_line', True)
+    date = False if x_key != 'date' else True
+
+    # filters
+    if teams is not None and isinstance(teams, list):
+        df = filter_df_on_team_names(df, teams)
+    if min_seconds is not None and isinstance(min_seconds, int):
+        if min_seconds >= 60:
+            df = df[df['seconds_played'] >= min_seconds]
+        else:
+            df = df[df['minutes_played'] >= min_seconds]
+    if max_seconds is not None and isinstance(max_seconds, int):
+        if max_seconds >= 60:
+            df = df[df['seconds_played'] <= max_seconds]
+        else:
+            df = df[df['minutes_played'] <= max_seconds]
+    graph_kind = 'scatter'
+    print(date)
+    if date:
+        df['datetime'] = pd.to_datetime(df['date'], format='%y_%m_%d')
+        x_key = 'datetime'
+        graph_kind = 'line'
+    print(graph_kind)
+    temp_df = df[[x_key, y_key]]
+    series_size = temp_df[y_key].shape[0]
+    title = '%s vs %s (%s samples)' % (x_key.title().replace('_', ' '),
+                                       y_key.title().replace('_', ' '),
+                                       series_size)
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    temp_df.plot(kind=graph_kind, x=x_key, y=y_key, grid=grid, ax=ax)
+    ax.set_xlabel(x_key.title().replace('_', ' '))
+    ax.set_ylabel(y_key.title().replace('_', ' '))
+    plt.title(title)
+    plt.tight_layout()
+
+    # handle output
+    plot_path = None
+    if save_path is not None:
+        if os.path.isdir(save_path):
+            if not os.path.exists(os.path.join(save_path, 'plots')):
+                os.mkdir(os.path.join(save_path, 'plots'))
+            ymd = datetime.datetime.now().strftime("%y%m%d")
+            plot_path = os.path.join(save_path, 'plots', '%s_VS_%s_%s' % (x_key, y_key, ymd))
+            plt.savefig(plot_path)
+        else:
+            if save_path == 'svg_buffer':
+                fig_file = io.StringIO()
+                plt.savefig(fig_file, format='svg', bbox_inches='tight')
+                fig_data_svg = '<svg' + fig_file.getvalue().split('<svg')[1]
+                fig_file.close()
+                plot_path = fig_data_svg
+            else:
+                # save at the path given
+                plt.savefig(save_path)
+                plot_path = save_path
+            plt.clf()
+            plt.cla()
+            plt.close('all')
+    if show_plot:
+        plt.show()
+    return plot_path, df
 
 
 def create_bar_plot(df, bar_items, save_path=None, show_plot=False, team=None, date=None):
