@@ -9,6 +9,7 @@ import io
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.dates as plt_dates
 from collections import OrderedDict
 
 # third party imports
@@ -530,15 +531,39 @@ def create_date_plot(x_key, y_key, df, **kwargs):
                                        series_size)
     data_mean = np.mean(temp_df[y_key])
     fig, ax = plt.subplots(figsize=(10, 6))
-    temp_df.plot(kind=graph_kind, x=x_key, y=y_key, style='.', ms=10, grid=False, ax=ax)
+    temp_df.plot(kind=graph_kind, x=x_key, y=y_key, style='.', ms=10, ax=ax)
     plt.axhline(y=data_mean, label='Mean: %s' % np.round(data_mean, 1), color='red')
-    ax.set_xlabel(x_key.title().replace('_', ' '))
+    ax.set_xlabel('Date (month-day)')
     ax.set_ylabel(y_key.title().replace('_', ' '))
     ax.set_xlim([ax.get_xlim()[0] - 2, ax.get_xlim()[1] + 2])
-    ax.set_xticks(temp_df[x_key])
+
+    # calc x tick dates
+    start, end = ax.get_xlim()[0], ax.get_xlim()[1]
+    if (end - start) > 0:
+        ticks_needed = (end - start) / 4
+        x_ticks = [end]
+        for i in range(np.cast['int'](ticks_needed)):
+            temp_tick = start + (i * 4)
+            x_ticks.append(temp_tick)
+        ax.set_xticks(x_ticks)
+    date_format = plt_dates.DateFormatter('%m-%d')
+    ax.xaxis.set_major_formatter(date_format)
+
+    # calc y tick dates
+    top = ax.get_ylim()[1]
+    if top >= 30:
+        y_ticks = [0]
+        temp_tick = 5
+        while temp_tick < top:
+            y_ticks.append(temp_tick)
+            temp_tick += 5
+        ax.set_yticks(y_ticks)
+
+    # ax.grid(axis='y')
+    ax.grid()
     plt.title(title)
     plt.tight_layout()
-    plt.legend()
+    plt.legend(loc='best')
 
     # handle output
     plot_path = None
