@@ -495,20 +495,27 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, **kwargs):
 
 
 def create_date_plot(x_key, y_key, df, **kwargs):
-    teams = kwargs.get('teams', None)
+    """
+    todo
+
+    :param x_key:
+    :param y_key:
+    :param df:
+    :param kwargs:
+    :return:
+    """
+    player = kwargs.get('player', None)
     save_path = kwargs.get('save_path', None)
     show_plot = kwargs.get('show_plot', False)
     min_seconds = kwargs.get('min_seconds', None)
     max_seconds = kwargs.get('max_seconds', None)
     num_outliers = kwargs.get('num_outliers', 5)
-    grid = kwargs.get('grid', True)
-    trend_line = kwargs.get('trend_line', True)
-    date = False if x_key != 'date' else True
+    grid = kwargs.get('grid', 'both')
+    mean_line = kwargs.get('mean_line', True)
 
     # filters
-    if teams is not None and isinstance(teams, list):
-        df = filter_df_on_team_names(df, teams)
-        df = df[df.index.isin(['Anthony Davis'])]
+    if player is not None and isinstance(player, str):
+        df = df[df.index.isin([player])]
     if min_seconds is not None and isinstance(min_seconds, int):
         if min_seconds >= 60:
             df = df[df['seconds_played'] >= min_seconds]
@@ -519,11 +526,9 @@ def create_date_plot(x_key, y_key, df, **kwargs):
             df = df[df['seconds_played'] <= max_seconds]
         else:
             df = df[df['minutes_played'] <= max_seconds]
-    graph_kind = 'scatter'
-    if date:
-        df['datetime'] = pd.to_datetime(df['date'], format='%y_%m_%d')
-        x_key = 'datetime'
-        graph_kind = 'line'
+
+    df['datetime'] = pd.to_datetime(df['date'], format='%y_%m_%d')
+    x_key = 'datetime'
     temp_df = df[[x_key, y_key]]
     series_size = temp_df[y_key].shape[0]
     title = '%s vs %s (%s samples)' % (x_key.title().replace('_', ' '),
@@ -531,8 +536,10 @@ def create_date_plot(x_key, y_key, df, **kwargs):
                                        series_size)
     data_mean = np.mean(temp_df[y_key])
     fig, ax = plt.subplots(figsize=(10, 6))
-    temp_df.plot(kind=graph_kind, x=x_key, y=y_key, style='.', ms=10, ax=ax)
-    plt.axhline(y=data_mean, label='Mean: %s' % np.round(data_mean, 1), color='red')
+    temp_df.plot(kind='line', x=x_key, y=y_key, style='.', ms=10, ax=ax)
+    if mean_line:
+        plt.axhline(y=data_mean, label='Mean: %s' % np.round(data_mean, 1), color='red')
+        plt.legend(loc='best')
     ax.set_xlabel('Date (month-day)')
     ax.set_ylabel(y_key.title().replace('_', ' '))
     ax.set_xlim([ax.get_xlim()[0] - 2, ax.get_xlim()[1] + 2])
@@ -559,11 +566,15 @@ def create_date_plot(x_key, y_key, df, **kwargs):
             temp_tick += 5
         ax.set_yticks(y_ticks)
 
-    # ax.grid(axis='y')
-    ax.grid()
+    if grid != 'none':
+        if grid == 'x':
+            ax.grid(axis='x')
+        elif grid == 'y':
+            ax.grid(axis='y')
+        else:
+            ax.grid()
     plt.title(title)
     plt.tight_layout()
-    plt.legend(loc='best')
 
     # handle output
     plot_path = None
