@@ -531,16 +531,22 @@ def create_date_plot(y_key, player, df, **kwargs):
             # we don't want to try if the player name is invalid
             perform_plot = False
             plot_path = 'Invalid player name of %s' % player
-    if min_seconds is not None and isinstance(min_seconds, int):
-        if min_seconds >= 60:
-            df = df[df['seconds_played'] >= min_seconds]
+    if isinstance(min_seconds, int) and isinstance(max_seconds, int):
+        if max_seconds > min_seconds:
+            if min_seconds >= 60:
+                df = df[df['seconds_played'] >= min_seconds]
+            else:
+                df = df[df['minutes_played'] >= min_seconds]
+            if max_seconds >= 60:
+                df = df[df['seconds_played'] <= max_seconds]
+            else:
+                df = df[df['minutes_played'] <= max_seconds]
         else:
-            df = df[df['minutes_played'] >= min_seconds]
-    if max_seconds is not None and isinstance(max_seconds, int):
-        if max_seconds >= 60:
-            df = df[df['seconds_played'] <= max_seconds]
-        else:
-            df = df[df['minutes_played'] <= max_seconds]
+            plot_path = 'Max seconds < Min seconds'
+            perform_plot = False
+    else:
+        plot_path = 'Max/Min seconds incorrect type %s %s' % (type(min_seconds), type(max_seconds))
+        perform_plot = False
 
     # todo need to check that the data frame at this point has sufficient data to plot
     if perform_plot:

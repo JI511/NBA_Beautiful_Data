@@ -374,8 +374,36 @@ class TestAnalyticsApi(unittest.TestCase):
                                             y_key='points',
                                             df=df,
                                             save_path=self.logs_dir,
-                                            grid='BAD')
+                                            grid='both')
         self.assertEqual(plot_path, 'Invalid player name of Bad Name')
+
+    def test_create_date_plot_invalid_min_seconds(self):
+        """
+        The function `create_date_plot` shall create and save a plot with default max and min seconds when provided
+        an invalid min seconds value.
+        """
+        my_csv = 'player_box_scores.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path, _ = Api.create_date_plot(player='Anthony Davis',
+                                            y_key='points',
+                                            df=df,
+                                            save_path=self.logs_dir,
+                                            min_seconds='a')
+        self.assertTrue('Max/Min seconds incorrect type' in plot_path)
+
+    def test_create_date_plot_invalid_max_seconds(self):
+        """
+        The function `create_date_plot` shall create and save a plot with default max and min seconds when provided
+        an invalid max seconds value.
+        """
+        my_csv = 'player_box_scores.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path, _ = Api.create_date_plot(player='Anthony Davis',
+                                            y_key='points',
+                                            df=df,
+                                            save_path=self.logs_dir,
+                                            max_seconds='a')
+        self.assertTrue('Max/Min seconds incorrect type' in plot_path)
 
     # ------------------------------------------------------------------------------------------------------------------
     # create_bar_plot tests
