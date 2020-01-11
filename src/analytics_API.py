@@ -522,6 +522,7 @@ def create_date_plot(y_key, player, df, **kwargs):
 
     # filters
     if player is not None and isinstance(player, str):
+        # todo probably should have something to make sure player name is valid
         df = df[df.index.isin([player])]
     if min_seconds is not None and isinstance(min_seconds, int):
         if min_seconds >= 60:
@@ -533,6 +534,8 @@ def create_date_plot(y_key, player, df, **kwargs):
             df = df[df['seconds_played'] <= max_seconds]
         else:
             df = df[df['minutes_played'] <= max_seconds]
+
+    # todo need to check that the data frame at this point has sufficient data to plot
 
     df['datetime'] = pd.to_datetime(df['date'], format='%y_%m_%d')
     x_key = 'datetime'

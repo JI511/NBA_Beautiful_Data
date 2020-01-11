@@ -314,8 +314,53 @@ class TestAnalyticsApi(unittest.TestCase):
         plot_path, _ = Api.create_date_plot(player='Anthony Davis',
                                             y_key='points',
                                             df=df,
-                                            grid='both',
                                             save_path=self.logs_dir)
+        self.assertTrue(os.path.exists('%s.png' % plot_path))
+
+    def test_create_date_plot_nominal_params(self):
+        """
+        The function `create_date_plot` shall create and save a date plot when provided nominal data and optional
+            **kwarg arguments.
+        """
+        my_csv = 'player_box_scores.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path, _ = Api.create_date_plot(player='Anthony Davis',
+                                            y_key='points',
+                                            df=df,
+                                            save_path=self.logs_dir,
+                                            min_seconds=300,
+                                            max_seconds=2200,
+                                            num_outliers=7,
+                                            grid='x',
+                                            mean_line=False)
+        self.assertTrue(os.path.exists('%s.png' % plot_path))
+
+    def test_create_date_plot_y_grid(self):
+        """
+        The function `create_date_plot` shall create and save a date plot with a y axis grid only when provided
+        with nominal data and grid = 'y'.
+        """
+        my_csv = 'player_box_scores.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path, _ = Api.create_date_plot(player='Anthony Davis',
+                                            y_key='points',
+                                            df=df,
+                                            save_path=self.logs_dir,
+                                            grid='y')
+        self.assertTrue(os.path.exists('%s.png' % plot_path))
+
+    def test_create_date_plot_bad_grid(self):
+        """
+        The function `create_date_plot` shall create and save a date plot with a default grid when provided
+        with nominal data and grid is not both, x, or y.
+        """
+        my_csv = 'player_box_scores.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path, _ = Api.create_date_plot(player='Anthony Davis',
+                                            y_key='points',
+                                            df=df,
+                                            save_path=self.logs_dir,
+                                            grid='BAD')
         self.assertTrue(os.path.exists('%s.png' % plot_path))
 
     # ------------------------------------------------------------------------------------------------------------------
