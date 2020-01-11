@@ -349,10 +349,10 @@ class TestAnalyticsApi(unittest.TestCase):
                                             grid='y')
         self.assertTrue(os.path.exists('%s.png' % plot_path))
 
-    def test_create_date_plot_bad_grid(self):
+    def test_create_date_plot_invalid_grid(self):
         """
         The function `create_date_plot` shall create and save a date plot with a default grid when provided
-        with nominal data and grid is not both, x, or y.
+        with nominal data and grid is not one of the following: both, x, or y.
         """
         my_csv = 'player_box_scores.csv'
         df = Api.get_existing_data_frame(my_csv, logger=self.logger)
@@ -362,6 +362,20 @@ class TestAnalyticsApi(unittest.TestCase):
                                             save_path=self.logs_dir,
                                             grid='BAD')
         self.assertTrue(os.path.exists('%s.png' % plot_path))
+
+    def test_create_date_plot_invalid_player_name(self):
+        """
+        The function `create_date_plot` shall return a plot path of invalid player name when given a player name
+        that is not in the pandas.DataFrame object provided.
+        """
+        my_csv = 'player_box_scores.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path, _ = Api.create_date_plot(player='Bad Name',
+                                            y_key='points',
+                                            df=df,
+                                            save_path=self.logs_dir,
+                                            grid='BAD')
+        self.assertEqual(plot_path, 'Invalid player name of Bad Name')
 
     # ------------------------------------------------------------------------------------------------------------------
     # create_bar_plot tests

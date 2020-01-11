@@ -519,11 +519,18 @@ def create_date_plot(y_key, player, df, **kwargs):
     num_outliers = kwargs.get('num_outliers', 5)  # todo
     grid = kwargs.get('grid', 'both')
     mean_line = kwargs.get('mean_line', True)
+    plot_path = None
 
     # filters
+    perform_plot = True
     if player is not None and isinstance(player, str):
-        # todo probably should have something to make sure player name is valid
-        df = df[df.index.isin([player])]
+        # todo check if this is complete, I think sub strings will cause bad behavior
+        if np.any(df.index.isin([player])):
+            df = df[df.index.isin([player])]
+        else:
+            # we don't want to try if the player name is invalid
+            perform_plot = False
+            plot_path = 'Invalid player name of %s' % player
     if min_seconds is not None and isinstance(min_seconds, int):
         if min_seconds >= 60:
             df = df[df['seconds_played'] >= min_seconds]
@@ -536,81 +543,81 @@ def create_date_plot(y_key, player, df, **kwargs):
             df = df[df['minutes_played'] <= max_seconds]
 
     # todo need to check that the data frame at this point has sufficient data to plot
+    if perform_plot:
+        df['datetime'] = pd.to_datetime(df['date'], format='%y_%m_%d')
+        x_key = 'datetime'
+        temp_df = df[[x_key, y_key]]
+        series_size = temp_df[y_key].shape[0]
+        title = '%s: %s (%s samples)' % (player,
+                                         y_key.title().replace('_', ' '),
+                                         series_size)
+        data_mean = np.mean(temp_df[y_key])
+        fig, ax = plt.subplots(figsize=(10, 6))
+        temp_df.plot(kind='line', x=x_key, y=y_key, style='.', ms=10, ax=ax)
+        if mean_line:
+            plt.axhline(y=data_mean, label='Mean: %s' % np.round(data_mean, 1), color='red')
+            plt.legend(loc='best')
+        ax.set_xlabel('Date (month-day)')
+        ax.set_ylabel(y_key.title().replace('_', ' '))
+        ax.set_xlim([ax.get_xlim()[0] - 2, ax.get_xlim()[1] + 2])
 
-    df['datetime'] = pd.to_datetime(df['date'], format='%y_%m_%d')
-    x_key = 'datetime'
-    temp_df = df[[x_key, y_key]]
-    series_size = temp_df[y_key].shape[0]
-    title = '%s: %s (%s samples)' % (player,
-                                     y_key.title().replace('_', ' '),
-                                     series_size)
-    data_mean = np.mean(temp_df[y_key])
-    fig, ax = plt.subplots(figsize=(10, 6))
-    temp_df.plot(kind='line', x=x_key, y=y_key, style='.', ms=10, ax=ax)
-    if mean_line:
-        plt.axhline(y=data_mean, label='Mean: %s' % np.round(data_mean, 1), color='red')
-        plt.legend(loc='best')
-    ax.set_xlabel('Date (month-day)')
-    ax.set_ylabel(y_key.title().replace('_', ' '))
-    ax.set_xlim([ax.get_xlim()[0] - 2, ax.get_xlim()[1] + 2])
+        # calc x tick dates
+        start, end = ax.get_xlim()[0], ax.get_xlim()[1]
+        if (end - start) > 0:
+            ticks_needed = (end - start) / 4
+            x_ticks = [end]
+            for i in range(np.cast['int'](ticks_needed)):
+                temp_tick = start + (i * 4)
+                x_ticks.append(temp_tick)
+            ax.set_xticks(x_ticks)
+        date_format = plt_dates.DateFormatter('%m-%d')
+        ax.xaxis.set_major_formatter(date_format)
 
-    # calc x tick dates
-    start, end = ax.get_xlim()[0], ax.get_xlim()[1]
-    if (end - start) > 0:
-        ticks_needed = (end - start) / 4
-        x_ticks = [end]
-        for i in range(np.cast['int'](ticks_needed)):
-            temp_tick = start + (i * 4)
-            x_ticks.append(temp_tick)
-        ax.set_xticks(x_ticks)
-    date_format = plt_dates.DateFormatter('%m-%d')
-    ax.xaxis.set_major_formatter(date_format)
+        # calc y tick dates
+        top = ax.get_ylim()[1]
+        if top >= 30:
+            y_ticks = [0]
+            temp_tick = 5
+            while temp_tick < top:
+                y_ticks.append(temp_tick)
+                temp_tick += 5
+            ax.set_yticks(y_ticks)
 
-    # calc y tick dates
-    top = ax.get_ylim()[1]
-    if top >= 30:
-        y_ticks = [0]
-        temp_tick = 5
-        while temp_tick < top:
-            y_ticks.append(temp_tick)
-            temp_tick += 5
-        ax.set_yticks(y_ticks)
-
-    if grid != 'none':
-        if grid == 'x':
-            ax.grid(axis='x')
-        elif grid == 'y':
-            ax.grid(axis='y')
-        else:
-            ax.grid()
-    plt.title(title)
-    plt.tight_layout()
-
-    # handle output
-    plot_path = None
-    if save_path is not None:
-        if os.path.isdir(save_path):
-            if not os.path.exists(os.path.join(save_path, 'plots')):
-                os.mkdir(os.path.join(save_path, 'plots'))
-            ymd = datetime.datetime.now().strftime("%y%m%d")
-            plot_path = os.path.join(save_path, 'plots', '%s_VS_%s_%s' % (x_key, y_key, ymd))
-            plt.savefig(plot_path)
-        else:
-            if save_path == 'svg_buffer':
-                fig_file = io.StringIO()
-                plt.savefig(fig_file, format='svg', bbox_inches='tight')
-                fig_data_svg = '<svg' + fig_file.getvalue().split('<svg')[1]
-                fig_file.close()
-                plot_path = fig_data_svg
+        if grid != 'none':
+            if grid == 'x':
+                ax.grid(axis='x')
+            elif grid == 'y':
+                ax.grid(axis='y')
             else:
-                # save at the path given
-                plt.savefig(save_path)
-                plot_path = save_path
-            plt.clf()
-            plt.cla()
-            plt.close('all')
-    if show_plot:
-        plt.show()
+                ax.grid()
+        plt.title(title)
+        plt.tight_layout()
+
+        # handle output
+
+        if save_path is not None:
+            if os.path.isdir(save_path):
+                if not os.path.exists(os.path.join(save_path, 'plots')):
+                    os.mkdir(os.path.join(save_path, 'plots'))
+                ymd = datetime.datetime.now().strftime("%y%m%d")
+                plot_path = os.path.join(save_path, 'plots', '%s_VS_%s_%s' % (x_key, y_key, ymd))
+                plt.savefig(plot_path)
+            else:
+                if save_path == 'svg_buffer':
+                    fig_file = io.StringIO()
+                    plt.savefig(fig_file, format='svg', bbox_inches='tight')
+                    fig_data_svg = '<svg' + fig_file.getvalue().split('<svg')[1]
+                    fig_file.close()
+                    plot_path = fig_data_svg
+                else:
+                    # save at the path given
+                    plt.savefig(save_path)
+                    plot_path = save_path
+                plt.clf()
+                plt.cla()
+                plt.close('all')
+        if show_plot:
+            plt.show()
     return plot_path, df
 
 
