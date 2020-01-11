@@ -69,8 +69,7 @@ class Application(object):
             # Api.create_scatter_plot_with_trend_line(x_key=x_key, y_key=y_key, df=df, num_outliers=5,
             #                                         min_seconds=0, max_seconds=60*35, teams=['Los Angeles Lakers'],
             #                                         show_plot=True)
-            x_key = 'date'
-            Api.create_date_plot(x_key=x_key, y_key=y_key, df=df, num_outliers=5,
+            Api.create_date_plot(y_key=y_key, df=df, num_outliers=5,
                                  min_seconds=0, max_seconds=6000, player='Anthony Davis',
                                  show_plot=True, save_path=os.getcwd())
             # items = ['points', 'rebounds', 'assists']

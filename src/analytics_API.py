@@ -494,22 +494,29 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, **kwargs):
     return plot_path, outlier_df_full, df
 
 
-def create_date_plot(x_key, y_key, df, **kwargs):
+def create_date_plot(y_key, player, df, **kwargs):
     """
-    todo
+    Creates a plot of player data based on a given key.
 
-    :param x_key:
-    :param y_key:
-    :param df:
-    :param kwargs:
-    :return:
+    :param y_key: The stat to filter on
+    :param str player: The name of the player to search for
+    :param df: The pandas.DataFrame object to search in
+
+    Supported **kwargs:
+        save_path: The path to save the plot to or the type of plot to save
+        show_plot: Determines if the plot should be shown to the user
+        min_seconds: The minimum seconds to filter on
+        max_seconds: The maximum seconds to filter on
+        num_outliers: The number of outlier data points to collect
+        grid: Determines if both x and y axis grids should be used, or just one or the other
+        mean_line: Determines if a mean line should be shown of all collected data points
+    :return: todo
     """
-    player = kwargs.get('player', None)
     save_path = kwargs.get('save_path', None)
     show_plot = kwargs.get('show_plot', False)
-    min_seconds = kwargs.get('min_seconds', None)
-    max_seconds = kwargs.get('max_seconds', None)
-    num_outliers = kwargs.get('num_outliers', 5)
+    min_seconds = kwargs.get('min_seconds', 0)
+    max_seconds = kwargs.get('max_seconds', 6000)
+    num_outliers = kwargs.get('num_outliers', 5)  # todo
     grid = kwargs.get('grid', 'both')
     mean_line = kwargs.get('mean_line', True)
 
@@ -531,9 +538,9 @@ def create_date_plot(x_key, y_key, df, **kwargs):
     x_key = 'datetime'
     temp_df = df[[x_key, y_key]]
     series_size = temp_df[y_key].shape[0]
-    title = '%s vs %s (%s samples)' % (x_key.title().replace('_', ' '),
-                                       y_key.title().replace('_', ' '),
-                                       series_size)
+    title = '%s: %s (%s samples)' % (player,
+                                     y_key.title().replace('_', ' '),
+                                     series_size)
     data_mean = np.mean(temp_df[y_key])
     fig, ax = plt.subplots(figsize=(10, 6))
     temp_df.plot(kind='line', x=x_key, y=y_key, style='.', ms=10, ax=ax)
