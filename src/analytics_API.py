@@ -137,7 +137,8 @@ def convert_to_minutes(seconds_played):
     Converts seconds into minutes.
 
     :param seconds_played:
-    :return:
+    :return: Minutes played
+    :rtype: float
     """
     minutes = seconds_played / 60.0
     return round(minutes, 2)
@@ -185,7 +186,6 @@ def check_supported_stats(stats):
     :return: Indicates if all provided stats are acceptable.
     :rtype: bool
     """
-
     valid = True
     for stat in stats:
         if stat not in Vars.supported_stats:
@@ -203,11 +203,10 @@ def convert_team_name(team):
     """
     return team.title().replace('_', ' ')
 
+
 # ----------------------------------------------------------------------------------------------------------------------
 # Pandas interactions
 # ----------------------------------------------------------------------------------------------------------------------
-
-
 def get_existing_data_frame(csv_path, logger):
     """
     Determines if a data frame already exists, and returns the data frame if true. Returns None if does not exist.
@@ -404,8 +403,8 @@ def create_scatter_plot_with_trend_line(x_key, y_key, df, **kwargs):
     teams = kwargs.get('teams', None)
     save_path = kwargs.get('save_path', None)
     show_plot = kwargs.get('show_plot', False)
-    min_seconds = kwargs.get('min_seconds', None)
-    max_seconds = kwargs.get('max_seconds', None)
+    min_seconds = kwargs.get('min_seconds', 0)
+    max_seconds = kwargs.get('max_seconds', 6000)
     num_outliers = kwargs.get('num_outliers', 5)
     grid = kwargs.get('grid', True)
     trend_line = kwargs.get('trend_line', True)
@@ -502,7 +501,7 @@ def create_date_plot(y_key, player, df, **kwargs):
     :param str player: The name of the player to search for
     :param df: The pandas.DataFrame object to search in
 
-    Supported **kwargs:
+    Supported kwargs:
         save_path: The path to save the plot to or the type of plot to save
         show_plot: Determines if the plot should be shown to the user
         min_seconds: The minimum seconds to filter on
@@ -510,7 +509,9 @@ def create_date_plot(y_key, player, df, **kwargs):
         num_outliers: The number of outlier data points to collect
         grid: Determines if both x and y axis grids should be used, or just one or the other
         mean_line: Determines if a mean line should be shown of all collected data points
-    :return: todo
+
+    :return: The path of the created plot, outlier pandas.DataFrame object, full pandas.DataFrame object.
+    :rtype: tuple
     """
     save_path = kwargs.get('save_path', None)
     show_plot = kwargs.get('show_plot', False)
