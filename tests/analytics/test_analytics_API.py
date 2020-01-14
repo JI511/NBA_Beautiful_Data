@@ -377,6 +377,20 @@ class TestAnalyticsApi(unittest.TestCase):
                                             grid='both')
         self.assertEqual(plot_path, 'Invalid player name of Bad Name')
 
+    def test_create_date_plot_player_substring(self):
+        """
+        The function `create_date_plot` shall return a plot path of invalid player name when given a substring of a
+        player name that exists in the pandas.DataFrame object provided.
+        """
+        my_csv = 'player_box_scores.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path, _ = Api.create_date_plot(player='Anthony',
+                                            y_key='points',
+                                            df=df,
+                                            save_path=self.logs_dir,
+                                            grid='both')
+        self.assertEqual(plot_path, 'Invalid player name of Anthony')
+
     def test_create_date_plot_invalid_min_seconds(self):
         """
         The function `create_date_plot` shall create and save a plot with default max and min seconds when provided

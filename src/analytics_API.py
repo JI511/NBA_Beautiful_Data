@@ -524,7 +524,6 @@ def create_date_plot(y_key, player, df, **kwargs):
     # filters
     perform_plot = True
     if player is not None and isinstance(player, str):
-        # todo check if this is complete, I think sub strings will cause bad behavior
         if np.any(df.index.isin([player])):
             df = df[df.index.isin([player])]
         else:
