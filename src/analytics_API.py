@@ -547,8 +547,7 @@ def create_date_plot(y_key, player, df, **kwargs):
         plot_path = 'Max/Min seconds incorrect type %s %s' % (type(min_seconds), type(max_seconds))
         perform_plot = False
 
-    # todo need to check that the data frame at this point has sufficient data to plot
-    if perform_plot:
+    if perform_plot and df.shape[0] > 0:
         df['datetime'] = pd.to_datetime(df['date'], format='%y_%m_%d')
         x_key = 'datetime'
         temp_df = df[[x_key, y_key]]
