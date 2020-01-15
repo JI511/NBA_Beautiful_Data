@@ -499,7 +499,7 @@ def create_date_plot(y_key, player, df, **kwargs):
 
     :param y_key: The stat to filter on
     :param str player: The name of the player to search for
-    :param df: The pandas.DataFrame object to search in
+    :param pandas.DataFrame df: The pandas.DataFrame object to search in
 
     Supported kwargs:
         save_path: The path to save the plot to or the type of plot to save
@@ -521,6 +521,7 @@ def create_date_plot(y_key, player, df, **kwargs):
     grid = kwargs.get('grid', 'both')
     mean_line = kwargs.get('mean_line', True)
     plot_path = None
+    outlier_df = None
 
     # filters
     perform_plot = True
@@ -549,6 +550,9 @@ def create_date_plot(y_key, player, df, **kwargs):
         perform_plot = False
 
     if perform_plot and df.shape[0] > 0:
+        outlier_df = df.sort_values(by=[y_key], ascending=False)
+        outlier_df = outlier_df.head(n=num_outliers)
+
         df['datetime'] = pd.to_datetime(df['date'], format='%y_%m_%d')
         x_key = 'datetime'
         temp_df = df[[x_key, y_key]]
@@ -623,7 +627,7 @@ def create_date_plot(y_key, player, df, **kwargs):
                 plt.close('all')
         if show_plot:
             plt.show()
-    return plot_path, df
+    return plot_path, outlier_df, df
 
 
 def create_bar_plot(df, bar_items, save_path=None, show_plot=False, team=None, date=None):
