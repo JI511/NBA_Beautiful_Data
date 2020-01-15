@@ -22,7 +22,8 @@ if __name__ == '__main__':
                         dest='date_range')
     parser.add_argument('--update_to_current', help='Update up to today\'s date from the last collected date.',
                         dest='update_to_current', action='store_true')
-    parser.set_defaults(yesterday=False, log=False, plot=False, gather_new=False, date_range='', update_to_current=True)
+    parser.set_defaults(yesterday=False, log=False, plot=False, gather_new=False, date_range='',
+                        update_to_current=False)
     args = parser.parse_args()
 
     date = datetime.datetime.now()

@@ -10,7 +10,7 @@ import shutil
 import logging
 import datetime
 import sys
-sys.path.append(os.getcwd())
+sys.path.append(os.getcwd())  # this was needed to run the coverage library outside of pycharm
 # third party imports
 from basketball_reference_web_scraper.data import Team
 # relative imports
@@ -301,6 +301,139 @@ class TestAnalyticsApi(unittest.TestCase):
                                                                   grid=False,
                                                                   save_path=self.logs_dir)
         self.assertTrue(os.path.exists('%s.png' % plot_path))
+
+    # ------------------------------------------------------------------------------------------------------------------
+    # create_date_plot tests
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_create_date_plot_nominal(self):
+        """
+        The function `create_date_plot` shall create and save a date plot when provided nominal data.
+        """
+        my_csv = 'player_box_scores.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path, outlier_df, _ = Api.create_date_plot(player='Anthony Davis',
+                                                        y_key='points',
+                                                        df=df,
+                                                        save_path=self.logs_dir)
+        self.assertTrue(os.path.exists('%s.png' % plot_path))
+        self.assertEqual(5, outlier_df.shape[0])
+
+    def test_create_date_plot_nominal_params(self):
+        """
+        The function `create_date_plot` shall create and save a date plot when provided nominal data and optional
+            **kwarg arguments.
+        """
+        my_csv = 'player_box_scores.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path, _, _ = Api.create_date_plot(player='Anthony Davis',
+                                               y_key='points',
+                                               df=df,
+                                               save_path=self.logs_dir,
+                                               min_seconds=300,
+                                               max_seconds=2200,
+                                               num_outliers=7,
+                                               grid='x',
+                                               mean_line=False)
+        self.assertTrue(os.path.exists('%s.png' % plot_path))
+
+    def test_create_date_plot_y_grid(self):
+        """
+        The function `create_date_plot` shall create and save a date plot with a y axis grid only when provided
+        with nominal data and grid = 'y'.
+        """
+        my_csv = 'player_box_scores.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path, _, _ = Api.create_date_plot(player='Anthony Davis',
+                                               y_key='points',
+                                               df=df,
+                                               save_path=self.logs_dir,
+                                               grid='y')
+        self.assertTrue(os.path.exists('%s.png' % plot_path))
+
+    def test_create_date_plot_invalid_grid(self):
+        """
+        The function `create_date_plot` shall create and save a date plot with a default grid when provided
+        with nominal data and grid is not one of the following: both, x, or y.
+        """
+        my_csv = 'player_box_scores.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path, _, _ = Api.create_date_plot(player='Anthony Davis',
+                                               y_key='points',
+                                               df=df,
+                                               save_path=self.logs_dir,
+                                               grid='BAD')
+        self.assertTrue(os.path.exists('%s.png' % plot_path))
+
+    def test_create_date_plot_invalid_player_name(self):
+        """
+        The function `create_date_plot` shall return a plot path of invalid player name when given a player name
+        that is not in the pandas.DataFrame object provided.
+        """
+        my_csv = 'player_box_scores.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path, _, _ = Api.create_date_plot(player='Bad Name',
+                                               y_key='points',
+                                               df=df,
+                                               save_path=self.logs_dir,
+                                               grid='both')
+        self.assertEqual(plot_path, 'Invalid player name of Bad Name')
+
+    def test_create_date_plot_player_substring(self):
+        """
+        The function `create_date_plot` shall return a plot path of invalid player name when given a substring of a
+        player name that exists in the pandas.DataFrame object provided.
+        """
+        my_csv = 'player_box_scores.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path, _, _ = Api.create_date_plot(player='Anthony',
+                                               y_key='points',
+                                               df=df,
+                                               save_path=self.logs_dir,
+                                               grid='both')
+        self.assertEqual(plot_path, 'Invalid player name of Anthony')
+
+    def test_create_date_plot_invalid_min_seconds(self):
+        """
+        The function `create_date_plot` shall create and save a plot with default max and min seconds when provided
+        an invalid min seconds value.
+        """
+        my_csv = 'player_box_scores.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path, _, _ = Api.create_date_plot(player='Anthony Davis',
+                                               y_key='points',
+                                               df=df,
+                                               save_path=self.logs_dir,
+                                               min_seconds='a')
+        self.assertTrue('Max/Min seconds incorrect type' in plot_path)
+
+    def test_create_date_plot_invalid_max_seconds(self):
+        """
+        The function `create_date_plot` shall create and save a plot with default max and min seconds when provided
+        an invalid max seconds value.
+        """
+        my_csv = 'player_box_scores.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path, _, _ = Api.create_date_plot(player='Anthony Davis',
+                                               y_key='points',
+                                               df=df,
+                                               save_path=self.logs_dir,
+                                               max_seconds='a')
+        self.assertTrue('Max/Min seconds incorrect type' in plot_path)
+
+    def test_create_date_plot_outlier_count(self):
+        """
+        The function `create_date_plot` shall create and save a plot at the desired location and create a
+        pandas.DataFrame object holding the desired number of outlier points.
+        """
+        my_csv = 'player_box_scores.csv'
+        df = Api.get_existing_data_frame(my_csv, logger=self.logger)
+        plot_path, outlier_df, _ = Api.create_date_plot(player='Anthony Davis',
+                                                        y_key='points',
+                                                        df=df,
+                                                        num_outliers=8,
+                                                        save_path=self.logs_dir)
+        self.assertTrue(os.path.exists('%s.png' % plot_path))
+        self.assertEqual(8, outlier_df.shape[0])
 
     # ------------------------------------------------------------------------------------------------------------------
     # create_bar_plot tests
