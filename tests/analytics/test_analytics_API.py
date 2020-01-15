@@ -326,14 +326,14 @@ class TestAnalyticsApi(unittest.TestCase):
         my_csv = 'player_box_scores.csv'
         df = Api.get_existing_data_frame(my_csv, logger=self.logger)
         plot_path, _, _ = Api.create_date_plot(player='Anthony Davis',
-                                            y_key='points',
-                                            df=df,
-                                            save_path=self.logs_dir,
-                                            min_seconds=300,
-                                            max_seconds=2200,
-                                            num_outliers=7,
-                                            grid='x',
-                                            mean_line=False)
+                                               y_key='points',
+                                               df=df,
+                                               save_path=self.logs_dir,
+                                               min_seconds=300,
+                                               max_seconds=2200,
+                                               num_outliers=7,
+                                               grid='x',
+                                               mean_line=False)
         self.assertTrue(os.path.exists('%s.png' % plot_path))
 
     def test_create_date_plot_y_grid(self):
@@ -344,10 +344,10 @@ class TestAnalyticsApi(unittest.TestCase):
         my_csv = 'player_box_scores.csv'
         df = Api.get_existing_data_frame(my_csv, logger=self.logger)
         plot_path, _, _ = Api.create_date_plot(player='Anthony Davis',
-                                            y_key='points',
-                                            df=df,
-                                            save_path=self.logs_dir,
-                                            grid='y')
+                                               y_key='points',
+                                               df=df,
+                                               save_path=self.logs_dir,
+                                               grid='y')
         self.assertTrue(os.path.exists('%s.png' % plot_path))
 
     def test_create_date_plot_invalid_grid(self):
@@ -358,10 +358,10 @@ class TestAnalyticsApi(unittest.TestCase):
         my_csv = 'player_box_scores.csv'
         df = Api.get_existing_data_frame(my_csv, logger=self.logger)
         plot_path, _, _ = Api.create_date_plot(player='Anthony Davis',
-                                            y_key='points',
-                                            df=df,
-                                            save_path=self.logs_dir,
-                                            grid='BAD')
+                                               y_key='points',
+                                               df=df,
+                                               save_path=self.logs_dir,
+                                               grid='BAD')
         self.assertTrue(os.path.exists('%s.png' % plot_path))
 
     def test_create_date_plot_invalid_player_name(self):
@@ -372,10 +372,10 @@ class TestAnalyticsApi(unittest.TestCase):
         my_csv = 'player_box_scores.csv'
         df = Api.get_existing_data_frame(my_csv, logger=self.logger)
         plot_path, _, _ = Api.create_date_plot(player='Bad Name',
-                                            y_key='points',
-                                            df=df,
-                                            save_path=self.logs_dir,
-                                            grid='both')
+                                               y_key='points',
+                                               df=df,
+                                               save_path=self.logs_dir,
+                                               grid='both')
         self.assertEqual(plot_path, 'Invalid player name of Bad Name')
 
     def test_create_date_plot_player_substring(self):
@@ -386,10 +386,10 @@ class TestAnalyticsApi(unittest.TestCase):
         my_csv = 'player_box_scores.csv'
         df = Api.get_existing_data_frame(my_csv, logger=self.logger)
         plot_path, _, _ = Api.create_date_plot(player='Anthony',
-                                            y_key='points',
-                                            df=df,
-                                            save_path=self.logs_dir,
-                                            grid='both')
+                                               y_key='points',
+                                               df=df,
+                                               save_path=self.logs_dir,
+                                               grid='both')
         self.assertEqual(plot_path, 'Invalid player name of Anthony')
 
     def test_create_date_plot_invalid_min_seconds(self):
@@ -400,10 +400,10 @@ class TestAnalyticsApi(unittest.TestCase):
         my_csv = 'player_box_scores.csv'
         df = Api.get_existing_data_frame(my_csv, logger=self.logger)
         plot_path, _, _ = Api.create_date_plot(player='Anthony Davis',
-                                            y_key='points',
-                                            df=df,
-                                            save_path=self.logs_dir,
-                                            min_seconds='a')
+                                               y_key='points',
+                                               df=df,
+                                               save_path=self.logs_dir,
+                                               min_seconds='a')
         self.assertTrue('Max/Min seconds incorrect type' in plot_path)
 
     def test_create_date_plot_invalid_max_seconds(self):
@@ -414,10 +414,10 @@ class TestAnalyticsApi(unittest.TestCase):
         my_csv = 'player_box_scores.csv'
         df = Api.get_existing_data_frame(my_csv, logger=self.logger)
         plot_path, _, _ = Api.create_date_plot(player='Anthony Davis',
-                                            y_key='points',
-                                            df=df,
-                                            save_path=self.logs_dir,
-                                            max_seconds='a')
+                                               y_key='points',
+                                               df=df,
+                                               save_path=self.logs_dir,
+                                               max_seconds='a')
         self.assertTrue('Max/Min seconds incorrect type' in plot_path)
 
     def test_create_date_plot_outlier_count(self):
